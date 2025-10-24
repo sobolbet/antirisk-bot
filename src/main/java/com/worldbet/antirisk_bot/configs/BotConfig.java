@@ -1,14 +1,13 @@
 package com.worldbet.antirisk_bot.configs;
 
-import com.worldbet.antirisk_bot.AntiRiskBotCore;
-import com.worldbet.antirisk_bot.services.KeyboardsService;
+import com.worldbet.antirisk_bot.controllers.AntiRiskBotCore;
+import com.worldbet.antirisk_bot.services.MessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
@@ -22,10 +21,13 @@ public class BotConfig {
     @Value("${telegram.botToken}")
     private String botToken;
 
+   /* @Autowired
+    MessageService messageService;*/
+
 
 
     @Bean
-    TelegramBotsApi telegramBotsApi  (AntiRiskBotCore antiRiskBotCore) throws Exception {
+    public TelegramBotsApi telegramBotsApi  (AntiRiskBotCore antiRiskBotCore) throws Exception {
 
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
         telegramBotsApi.registerBot(antiRiskBotCore);
@@ -37,9 +39,9 @@ public class BotConfig {
 
 
     @Bean
-    public AntiRiskBotCore antiRiskBotCore () {
+    public AntiRiskBotCore antiRiskBotCore (MessageService messageService) {
 
-        AntiRiskBotCore antiRiskBotCore = new AntiRiskBotCore ();
+        AntiRiskBotCore antiRiskBotCore = new AntiRiskBotCore (messageService);
         antiRiskBotCore.setBotUserName(botUserName);
         antiRiskBotCore.setBotToken(botToken);
 

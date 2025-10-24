@@ -1,0 +1,23 @@
+package com.worldbet.antirisk_bot.db;
+
+public enum BotState {
+    INIT_STATE,
+    INPUT_TIME,
+    INPUT_AMOUNT_HOUR,
+    INPUT_START_BANK,
+    READY_TO_START,
+    SHOW_INFO,
+    BEFORE_STARTING_TIMER,
+    TIMER_AT_WORK,
+    STOP_TIMER,
+    UPDATE_BANK,
+    NOT_UPDATE_BANK,
+    ASK_TO_USER,
+    GET_TRIAL,
+    PAY_SUBSCRIBE,
+    INSTRUCTION,
+    CHOICE_STRATEGY,
+    STRATEGY_NO_SELECTED,
+    STRATEGY_SELECTED
+
+}

@@ -13,11 +13,9 @@ import java.util.List;
 public class KeyboardsService {
 
 
-    public static SendMessage getMainMenu (String chat_id) {
+    public ReplyKeyboardMarkup getMainMenu (String chat_id) {
 
-        SendMessage message = new SendMessage();
-        message.setChatId(chat_id);
-        message.setText("Выберите нужную кнопку");
+
 
         final ReplyKeyboardMarkup replyKeyboard = new ReplyKeyboardMarkup();
         replyKeyboard.setSelective(false);
@@ -66,22 +64,15 @@ public class KeyboardsService {
         rowInLine2.add(inlineKeyboardButton2);*/
         //rowsInLine.add(rowInLine2);
 
-        message.enableMarkdown(true);
-        message.setChatId(chat_id);
-        message.setReplyMarkup(replyKeyboard);
 
 
-        return message;
+        return replyKeyboard;
     }
 
 
 
-    public static SendMessage getRespYesOrNo (String chat_id) {
+    public ReplyKeyboardMarkup getRespYesOrNo (String chat_id) {
 
-        SendMessage message = new SendMessage();
-        message.setChatId(chat_id);
-        message.setText("Хотите ли вы обновить основной (текущий) банк? " +
-                "(если обновить, то расчёт прибыли начнётся от начального банка, который вы ввели только что)");
 
         final ReplyKeyboardMarkup replyKeyboard = new ReplyKeyboardMarkup();
         replyKeyboard.setSelective(false);
@@ -110,20 +101,13 @@ public class KeyboardsService {
         rowInLine2.add(inlineKeyboardButton2);*/
         //rowsInLine.add(rowInLine2);
 
-        message.enableMarkdown(true);
-        message.setChatId(chat_id);
-        message.setReplyMarkup(replyKeyboard);
 
-
-        return message;
+        return replyKeyboard;
     }
 
 
-    public static SendMessage getListStartegy (String chat_id) {
+    public ReplyKeyboardMarkup getListStartegy (String chat_id) {
 
-        SendMessage message = new SendMessage();
-        message.setChatId(chat_id);
-        message.setText("Выберите стратегию для продолжения");
 
         final ReplyKeyboardMarkup replyKeyboard = new ReplyKeyboardMarkup();
         replyKeyboard.setSelective(false);
@@ -155,12 +139,8 @@ public class KeyboardsService {
         rowInLine2.add(inlineKeyboardButton2);*/
         //rowsInLine.add(rowInLine2);
 
-        message.enableMarkdown(true);
-        message.setChatId(chat_id);
-        message.setReplyMarkup(replyKeyboard);
 
-
-        return message;
+        return replyKeyboard;
     }
 
 
