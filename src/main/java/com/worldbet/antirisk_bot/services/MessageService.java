@@ -4,7 +4,10 @@ package com.worldbet.antirisk_bot.services;
 
 import com.worldbet.antirisk_bot.controllers.AntiRiskBotCore;
 import com.worldbet.antirisk_bot.db.BotState;
+import com.worldbet.antirisk_bot.db.UserEntity;
 import com.worldbet.antirisk_bot.handlers.BotStateContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -15,12 +18,16 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Locale;
+
 @Service
 public class MessageService {
 
+    private static final Logger log = LoggerFactory.getLogger(MessageService.class);
+
+
     @Autowired
     private MessageSource messageSource;
-    @Value("${localeTag}") String localeTag;
+    /*@Value("${localeTag}") */String localeTag;
 
     BotStateContext botStateContext;
     UserService userService;
@@ -50,16 +57,32 @@ public class MessageService {
 
         BotState botState = determineState(inputMessage);
 
+        log.info("до " +  botState);
+
 
         if (botState != null) {
+
+            if (botState.equals(BotState.INIT_STATE) && userService.findUserById(userId).getLocale()==null) {
+                botState = BotState.INPUT_LOCALE;
+            } else if (botState.equals(BotState.INIT_STATE) && userService.findUserById(userId).getLocale()!=null){
+                botState = BotState.GET_MAIN_MENU;
+            }
             userService.saveBotState(userId,botState);
         }
 
+
         BotState currentState = userService.getCurrentBotState(userId);
 
-        reply = new SendMessage();
+        log.info("после " +  currentState);
+
+
+
+
+        reply = botStateContext.processInputMessage(currentState,message);
+
+        /*reply = new SendMessage();
         reply.setChatId(userId);
-        reply.setText(currentState.toString());
+        reply.setText(currentState.toString() + " ");*/
 
         return reply;
 
@@ -91,6 +114,9 @@ public class MessageService {
             break;
             case "Инструкция к боту" : botState = BotState.INSTRUCTION;
             break;
+            case "Выберите язык" : botState = BotState.INPUT_LOCALE;
+            break;
+
 
         }
 

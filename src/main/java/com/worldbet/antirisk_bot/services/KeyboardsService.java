@@ -1,6 +1,6 @@
 package com.worldbet.antirisk_bot.services;
 
-import org.jvnet.hk2.annotations.Service;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -11,6 +11,12 @@ import java.util.List;
 
 @Service
 public class KeyboardsService {
+
+
+    public KeyboardsService () {
+
+    }
+
 
 
     public ReplyKeyboardMarkup getMainMenu (String chat_id) {
@@ -100,6 +106,38 @@ public class KeyboardsService {
         inlineKeyboardButton2.setCallbackData("XMASDRAW");
         rowInLine2.add(inlineKeyboardButton2);*/
         //rowsInLine.add(rowInLine2);
+
+
+        return replyKeyboard;
+    }
+
+
+
+    public ReplyKeyboardMarkup getLocaleKeyboard () {
+
+
+        final ReplyKeyboardMarkup replyKeyboard = new ReplyKeyboardMarkup();
+        replyKeyboard.setSelective(false);
+        replyKeyboard.setResizeKeyboard(true);
+        replyKeyboard.setOneTimeKeyboard(true);
+
+        List<KeyboardRow> keyBoard = new ArrayList<>();
+
+        KeyboardRow row1 = new KeyboardRow();
+        //KeyboardRow row2 = new KeyboardRow();
+
+        //KeyboardRow row5 = new KeyboardRow();
+        //KeyboardRow row6 = new KeyboardRow();
+        row1.add(new KeyboardButton("ru-RU"));
+        row1.add(new KeyboardButton("en-US"));
+        row1.add(new KeyboardButton("uz-UZ"));
+        //row4.add(new KeyboardButton(""));
+        keyBoard.add(row1);
+        //keyBoard.add(row2);
+        //keyBoard.add(row5);
+        //keyBoard.add(row6);
+        replyKeyboard.setKeyboard(keyBoard);
+
 
 
         return replyKeyboard;

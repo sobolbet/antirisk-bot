@@ -22,4 +22,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query (value = "select * from users.users as u where u.chat_id = :chatId", nativeQuery = true)
     UserEntity findUserByChatId(String chatId);
 
+   @Transactional
+    @Modifying
+    @Query("UPDATE UserEntity u SET u.locale = :locale WHERE u.chatId = :chatId")
+    int updateLocale (@Param("chatId") String chatId , @Param("locale") String locale);
+
 }

@@ -61,6 +61,9 @@ public class UserEntity {
     @Column (name = "strategy_id")
     private Integer strategyId;
 
+    @Column (name = "locale")
+    private String locale;
+
    /* @OneToMany (mappedBy = "userEntity")
     private List<PaymentEntity> paymentsList;*/
 
@@ -81,6 +84,15 @@ public class UserEntity {
     public void setPaymentsList(List<PaymentEntity> paymentsList) {
         this.paymentsList = paymentsList;
     }*/
+
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
 
     public UUID getId() {
         return id;

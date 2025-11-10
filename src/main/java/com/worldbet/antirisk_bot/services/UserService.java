@@ -39,6 +39,16 @@ public class UserService {
     }
 
 
+    public UserEntity findUserById (Long userId) {
+        return userRepository.findUserByChatId(userId.toString());
+    }
+
+    public void saveUserLocale (Long userId, String locale){
+        userRepository.updateLocale(userId.toString(),locale);
+    }
+
+
+
     public void save (String userName, Long chatId) {
 
         UserEntity user = new UserEntity(userName,chatId.toString());
