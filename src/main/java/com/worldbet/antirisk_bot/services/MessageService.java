@@ -2,6 +2,7 @@ package com.worldbet.antirisk_bot.services;
 
 
 
+import com.worldbet.antirisk_bot.configs.BotCommand;
 import com.worldbet.antirisk_bot.controllers.AntiRiskBotCore;
 import com.worldbet.antirisk_bot.db.BotState;
 import com.worldbet.antirisk_bot.db.UserEntity;
@@ -19,6 +20,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Locale;
 
+import static com.worldbet.antirisk_bot.configs.BotCommand.*;
+
 @Service
 public class MessageService {
 
@@ -31,11 +34,16 @@ public class MessageService {
 
     BotStateContext botStateContext;
     UserService userService;
+    LocaleMessageService localeMessageService;
+    CommandLocalizationService commandLocalizationService;
 
-    public MessageService  (BotStateContext botStateContext, UserService userService) {
+    public MessageService  (BotStateContext botStateContext, UserService userService, LocaleMessageService localeMessageService,
+                            CommandLocalizationService commandLocalizationService) {
 
         this.botStateContext = botStateContext;
         this.userService = userService;
+        this.localeMessageService = localeMessageService;
+        this.commandLocalizationService = commandLocalizationService;
 
     }
 
@@ -55,7 +63,7 @@ public class MessageService {
             userService.save(message.getFrom().getUserName(),userId);
         }
 
-        BotState botState = determineState(inputMessage);
+        BotState botState = determineState(inputMessage,userId);
 
         log.info("до " +  botState);
 
@@ -89,34 +97,57 @@ public class MessageService {
     }
 
 
-    private BotState determineState (String inputMessage) {
+    private BotState determineState (String inputMessage,Long userId) {
+
+
+        Locale userLocale = Locale.forLanguageTag(userService.findUserById(userId).getLocale());
+
+        BotCommand command = commandLocalizationService.resolveCommand(inputMessage,userLocale);
+
 
         BotState botState = null;
 
-        switch (inputMessage) {
-            case "/start" : botState = BotState.INIT_STATE;
-            break;
-            case "Параметры таймера" : botState = BotState.INPUT_TIME;
-            break;
-            case "Параметры банка" : botState = BotState.INPUT_START_BANK;
-            break;
-            case "Выбрать стратегию" : botState = BotState.CHOICE_STRATEGY;
-            break;
-            case "Посмотреть информацию" : botState = BotState.SHOW_INFO;
-            break;
-            case "Запустить таймер" : botState = BotState.BEFORE_STARTING_TIMER;
-            break;
-            case "Получить пробный период" : botState = BotState.GET_TRIAL;
-            break;
-            case "Оплатить подписку" : botState = BotState.PAY_SUBSCRIBE;
-            break;
-            case "Остановить таймер" : botState = BotState.STOP_TIMER;
-            break;
-            case "Инструкция к боту" : botState = BotState.INSTRUCTION;
-            break;
-            case "Выберите язык" : botState = BotState.INPUT_LOCALE;
-            break;
+        if (command != null) {
 
+            switch (command) {
+                case INIT_STATE:
+                    botState = BotState.INIT_STATE;
+                    break;
+                case TIMER_OPTIONS:
+                    botState = BotState.INPUT_TIME;
+                    break;
+                case BANK_OPTIONS:
+                    botState = BotState.INPUT_START_BANK;
+                    break;
+                case SELECT_STRATEGY:
+                    botState = BotState.CHOICE_STRATEGY;
+                    break;
+                case SHOW_INFO:
+                    botState = BotState.SHOW_INFO;
+                    break;
+                case START_TIMER:
+                    botState = BotState.BEFORE_STARTING_TIMER;
+                    break;
+                case GET_TRIAL:
+                    botState = BotState.GET_TRIAL;
+                    break;
+                case PAY_SUBSCRIBE:
+                    botState = BotState.PAY_SUBSCRIBE;
+                    break;
+                case STOP_TIMER:
+                    botState = BotState.STOP_TIMER;
+                    break;
+                case BOTS_INSTRUCTION:
+                    botState = BotState.INSTRUCTION;
+                    break;
+                case SELECT_LANG:
+                    botState = BotState.INPUT_LOCALE;
+                    break;
+                case SELECT_TIME_ZONE:
+                    botState = BotState.INPUT_LOCALE;
+                    break;
+
+            }
 
         }
 

@@ -8,18 +8,22 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 public class KeyboardsService {
 
+    private final LocaleMessageService localeMessageService;
 
-    public KeyboardsService () {
 
+    public KeyboardsService (LocaleMessageService localeMessageService) {
+
+        this.localeMessageService = localeMessageService;
     }
 
 
 
-    public ReplyKeyboardMarkup getMainMenu (String chat_id) {
+    public ReplyKeyboardMarkup getMainMenu (Locale userLocale) {
 
 
 
@@ -39,18 +43,22 @@ public class KeyboardsService {
         KeyboardRow row7 = new KeyboardRow();
         KeyboardRow row8 = new KeyboardRow();
         KeyboardRow row9 = new KeyboardRow();
-        //KeyboardRow row5 = new KeyboardRow();
-        //KeyboardRow row6 = new KeyboardRow();
-        row6.add(new KeyboardButton("Получить триал"));
-        row7.add(new KeyboardButton("Оплатить подписку"));
-        row1.add(new KeyboardButton("Параметры таймера"));
-        row5.add(new KeyboardButton("Параметры банка"));
-        row9.add(new KeyboardButton("Выбрать стратегию"));
-        row2.add(new KeyboardButton("Посмотреть информацию"));
-        row3.add(new KeyboardButton("Запустить бота"));
-        row4.add(new KeyboardButton("Остановить бота"));
-        row8.add(new KeyboardButton("Инструкция к боту"));
+        KeyboardRow row10 = new KeyboardRow();
+        KeyboardRow row11 = new KeyboardRow();
+        row10.add(new KeyboardButton(localeMessageService.getMessage("menu.select_lang",userLocale)));
+        row11.add(new KeyboardButton(localeMessageService.getMessage("menu.select_time_zone",userLocale)));
+        row6.add(new KeyboardButton(localeMessageService.getMessage("menu.get_trial",userLocale)));
+        row7.add(new KeyboardButton(localeMessageService.getMessage("menu.pay_subscribe",userLocale)));
+        row1.add(new KeyboardButton(localeMessageService.getMessage("menu.timer_options",userLocale)));
+        row5.add(new KeyboardButton(localeMessageService.getMessage("menu.bank_options",userLocale)));
+        row9.add(new KeyboardButton(localeMessageService.getMessage("menu.select_strategy",userLocale)));
+        row2.add(new KeyboardButton(localeMessageService.getMessage("menu.show_info",userLocale)));
+        row3.add(new KeyboardButton(localeMessageService.getMessage("menu.start_timer",userLocale)));
+        row4.add(new KeyboardButton(localeMessageService.getMessage("menu.stop_timer",userLocale)));
+        row8.add(new KeyboardButton(localeMessageService.getMessage("menu.bots_instruction",userLocale)));
         //row4.add(new KeyboardButton(""));
+        keyBoard.add(row10);
+        keyBoard.add(row11);
         keyBoard.add(row6);
         keyBoard.add(row7);
         keyBoard.add(row1);

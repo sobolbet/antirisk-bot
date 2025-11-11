@@ -37,7 +37,7 @@ public class GetMainMenuHandler implements InputMessageHandler{
         Locale userLocale = Locale.forLanguageTag(user.getLocale());
 
         replyToUser.setText(localeMessageService.getMessage("reply.getMainMenu",userLocale));
-        replyToUser.setReplyMarkup(keyboardsService.getMainMenu(userId.toString()));
+        replyToUser.setReplyMarkup(keyboardsService.getMainMenu(userLocale));
         replyToUser.setChatId(userId);
 
         return replyToUser;
