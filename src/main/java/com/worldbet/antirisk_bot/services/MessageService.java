@@ -144,7 +144,7 @@ public class MessageService {
                     botState = BotState.INPUT_LOCALE;
                     break;
                 case SELECT_TIME_ZONE:
-                    botState = BotState.INPUT_LOCALE;
+                    botState = BotState.INPUT_TIMEZONE;
                     break;
 
             }

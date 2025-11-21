@@ -152,6 +152,93 @@ public class KeyboardsService {
     }
 
 
+
+    public ReplyKeyboardMarkup getTimezoneKeyboard () {
+
+
+        final ReplyKeyboardMarkup replyKeyboard = new ReplyKeyboardMarkup();
+        replyKeyboard.setSelective(false);
+        replyKeyboard.setResizeKeyboard(true);
+        replyKeyboard.setOneTimeKeyboard(true);
+
+        List<KeyboardRow> keyBoard = new ArrayList<>();
+
+        KeyboardRow row1 = new KeyboardRow();
+        KeyboardRow row2 = new KeyboardRow();
+        KeyboardRow row3 = new KeyboardRow();
+        KeyboardRow row4 = new KeyboardRow();
+        KeyboardRow row5 = new KeyboardRow();
+        KeyboardRow row6 = new KeyboardRow();
+        KeyboardRow row7 = new KeyboardRow();
+        KeyboardRow row8 = new KeyboardRow();
+        KeyboardRow row9 = new KeyboardRow();
+        KeyboardRow row10 = new KeyboardRow();
+        KeyboardRow row11 = new KeyboardRow();
+        KeyboardRow row12 = new KeyboardRow();
+        KeyboardRow row13 = new KeyboardRow();
+
+        //KeyboardRow row5 = new KeyboardRow();
+        //KeyboardRow row6 = new KeyboardRow();
+        row1.add(new KeyboardButton("UTC-12:00"));
+        row1.add(new KeyboardButton("UTC−11:00"));
+        row1.add(new KeyboardButton("UTC−10:00"));
+        row2.add(new KeyboardButton("UTC−09:30"));
+        row2.add(new KeyboardButton("UTC−09:00"));
+        row2.add(new KeyboardButton("UTC−08:00"));
+        row3.add(new KeyboardButton("UTC−07:00"));
+        row3.add(new KeyboardButton("UTC−06:00"));
+        row3.add(new KeyboardButton("UTC−05:00"));
+        row4.add(new KeyboardButton("UTC−04:00"));
+        row4.add(new KeyboardButton("UTC−03:30"));
+        row4.add(new KeyboardButton("UTC−03:00"));
+        row5.add(new KeyboardButton("UTC−02:00"));
+        row5.add(new KeyboardButton("UTC−01:00"));
+        row5.add(new KeyboardButton("UTC−00:00"));
+        row6.add(new KeyboardButton("UTC+01:00"));
+        row6.add(new KeyboardButton("UTC+02:00"));
+        row6.add(new KeyboardButton("UTC+03:00"));
+        row7.add(new KeyboardButton("UTC+03:30"));
+        row7.add(new KeyboardButton("UTC+04:00"));
+        row7.add(new KeyboardButton("UTC+04:30"));
+        row8.add(new KeyboardButton("UTC+05:00"));
+        row8.add(new KeyboardButton("UTC+05:30"));
+        row8.add(new KeyboardButton("UTC+05:45"));
+        row9.add(new KeyboardButton("UTC+06:00"));
+        row9.add(new KeyboardButton("UTC+06:30"));
+        row9.add(new KeyboardButton("UTC+07:00"));
+        row10.add(new KeyboardButton("UTC+08:00"));
+        row10.add(new KeyboardButton("UTC+08:45"));
+        row10.add(new KeyboardButton("UTC+09:00"));
+        row11.add(new KeyboardButton("UTC+09:30"));
+        row11.add(new KeyboardButton("UTC+10:00"));
+        row11.add(new KeyboardButton("UTC+10:30"));
+        row12.add(new KeyboardButton("UTC+11:00"));
+        row12.add(new KeyboardButton("UTC+12:00"));
+        row12.add(new KeyboardButton("UTC+12:45"));
+        row13.add(new KeyboardButton("UTC+13:00"));
+        row13.add(new KeyboardButton("UTC+14:00"));
+        //row4.add(new KeyboardButton(""));
+        keyBoard.add(row1);
+        keyBoard.add(row2);
+        keyBoard.add(row3);
+        keyBoard.add(row4);
+        keyBoard.add(row5);
+        keyBoard.add(row6);
+        keyBoard.add(row7);
+        keyBoard.add(row8);
+        keyBoard.add(row9);
+        keyBoard.add(row10);
+        keyBoard.add(row11);
+        keyBoard.add(row12);
+        keyBoard.add(row13);
+        replyKeyboard.setKeyboard(keyBoard);
+
+
+
+        return replyKeyboard;
+    }
+
+
     public ReplyKeyboardMarkup getListStartegy (String chat_id) {
 
 

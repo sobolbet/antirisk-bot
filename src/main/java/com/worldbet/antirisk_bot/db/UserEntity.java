@@ -64,6 +64,9 @@ public class UserEntity {
     @Column (name = "locale")
     private String locale;
 
+    @Column (name = "timezone_utc")
+    private String timezoneUtc;
+
    /* @OneToMany (mappedBy = "userEntity")
     private List<PaymentEntity> paymentsList;*/
 
@@ -85,6 +88,14 @@ public class UserEntity {
         this.paymentsList = paymentsList;
     }*/
 
+
+    public String getTimezoneUtc() {
+        return timezoneUtc;
+    }
+
+    public void setTimezoneUtc(String timezoneUtc) {
+        this.timezoneUtc = timezoneUtc;
+    }
 
     public String getLocale() {
         return locale;

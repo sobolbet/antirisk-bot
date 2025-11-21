@@ -3,6 +3,8 @@ package com.worldbet.antirisk_bot.db;
 public enum BotState {
     INIT_STATE,
     INPUT_TIME,
+    INPUT_TIMEZONE,
+    SELECT_TIMEZONE,
     INPUT_LOCALE,
     LOCALE_SELECT,
     GET_MAIN_MENU,

@@ -34,7 +34,9 @@ public class UserService {
 
     public void saveBotState (Long userId, BotState botState) {
 
-        userRepository.updateStatus(userId.toString(),botState);
+        UserEntity user = userRepository.findUserByChatId(userId.toString());
+        user.setState(botState);
+        userRepository.save(user);
 
     }
 
@@ -44,7 +46,22 @@ public class UserService {
     }
 
     public void saveUserLocale (Long userId, String locale){
-        userRepository.updateLocale(userId.toString(),locale);
+        UserEntity user = userRepository.findUserByChatId(userId.toString());
+        user.setLocale(locale);
+        userRepository.save(user);
+    }
+
+
+    public void saveUserTimezone (Long userId, String timeZone){
+        UserEntity user = userRepository.findUserByChatId(userId.toString());
+        user.setTimeZone(timeZone);
+        userRepository.save(user);
+    }
+
+    public void saveUserTimezoneUtc (Long userId, String timeZoneUtc){
+        UserEntity user = userRepository.findUserByChatId(userId.toString());
+        user.setTimezoneUtc(timeZoneUtc);
+        userRepository.save(user);
     }
 
 
