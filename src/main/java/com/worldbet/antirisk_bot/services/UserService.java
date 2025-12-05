@@ -6,6 +6,7 @@ import com.worldbet.antirisk_bot.db.UserEntity;
 import com.worldbet.antirisk_bot.db.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.Optional;
 
 @Service
@@ -55,6 +56,18 @@ public class UserService {
     public void saveUserTimezone (Long userId, String timeZone){
         UserEntity user = userRepository.findUserByChatId(userId.toString());
         user.setTimeZone(timeZone);
+        userRepository.save(user);
+    }
+
+    public void saveUserLocalTime (Long userId, String localTime){
+        UserEntity user = userRepository.findUserByChatId(userId.toString());
+        user.setLocalTime(LocalTime.parse(localTime));
+        userRepository.save(user);
+    }
+
+    public void saveUserTimeJob (Long userId, String timeJob){
+        UserEntity user = userRepository.findUserByChatId(userId.toString());
+        user.setTimeJob(Long.parseLong(timeJob));
         userRepository.save(user);
     }
 
