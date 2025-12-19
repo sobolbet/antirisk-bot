@@ -85,7 +85,7 @@ public class KeyboardsService {
 
 
 
-    public ReplyKeyboardMarkup getRespYesOrNo (String chat_id) {
+    public ReplyKeyboardMarkup getRespYesOrNo (Locale userLocale) {
 
 
         final ReplyKeyboardMarkup replyKeyboard = new ReplyKeyboardMarkup();
@@ -100,8 +100,8 @@ public class KeyboardsService {
 
         //KeyboardRow row5 = new KeyboardRow();
         //KeyboardRow row6 = new KeyboardRow();
-        row1.add(new KeyboardButton("Обновить банк"));
-        row2.add(new KeyboardButton("Не обновлять банк"));
+        row1.add(new KeyboardButton(localeMessageService.getMessage("menu.update_bank",userLocale)));
+        row2.add(new KeyboardButton(localeMessageService.getMessage("menu.not_update_bank",userLocale)));
         //row4.add(new KeyboardButton(""));
         keyBoard.add(row1);
         keyBoard.add(row2);

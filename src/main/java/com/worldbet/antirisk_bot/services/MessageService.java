@@ -6,11 +6,13 @@ import com.worldbet.antirisk_bot.configs.BotCommand;
 import com.worldbet.antirisk_bot.controllers.AntiRiskBotCore;
 import com.worldbet.antirisk_bot.db.BotState;
 import com.worldbet.antirisk_bot.db.UserEntity;
+import com.worldbet.antirisk_bot.db.UserLocale;
 import com.worldbet.antirisk_bot.handlers.BotStateContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -36,6 +38,7 @@ public class MessageService {
     UserService userService;
     LocaleMessageService localeMessageService;
     CommandLocalizationService commandLocalizationService;
+
 
     public MessageService  (BotStateContext botStateContext, UserService userService, LocaleMessageService localeMessageService,
                             CommandLocalizationService commandLocalizationService) {
@@ -100,7 +103,7 @@ public class MessageService {
     private BotState determineState (String inputMessage,Long userId) {
 
 
-        Locale userLocale = Locale.forLanguageTag(userService.findUserById(userId).getLocale());
+        Locale userLocale = Locale.forLanguageTag(UserLocale.RU.getLocale());
 
         BotCommand command = commandLocalizationService.resolveCommand(inputMessage,userLocale);
 

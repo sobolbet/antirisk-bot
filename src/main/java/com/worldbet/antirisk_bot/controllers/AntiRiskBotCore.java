@@ -69,6 +69,22 @@ public class AntiRiskBotCore extends TelegramLongPollingBot {
             */
     }
 
+
+    /*public void sendMessage (Long userId, String text) {
+        try {
+            SendMessage sendMessage = new SendMessage();
+            sendMessage.setChatId(userId);
+            sendMessage.setText(text);
+            execute(sendMessage);
+        } catch (TelegramApiException ex) {
+            throw new RuntimeException(ex);
+        }
+
+    }*/
+
+
+
+
     @Override
     public String getBotUsername() {
         return botUserName;

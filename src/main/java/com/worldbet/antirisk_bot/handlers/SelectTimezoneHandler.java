@@ -1,10 +1,12 @@
 package com.worldbet.antirisk_bot.handlers;
 
 import com.worldbet.antirisk_bot.db.BotState;
+import com.worldbet.antirisk_bot.db.MessageToSendEvent;
 import com.worldbet.antirisk_bot.db.UserEntity;
 import com.worldbet.antirisk_bot.services.LocaleMessageService;
 import com.worldbet.antirisk_bot.services.TimeZoneService;
 import com.worldbet.antirisk_bot.services.UserService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -18,13 +20,15 @@ public class SelectTimezoneHandler implements InputMessageHandler{
     private final UserService userService;
     private final TimeZoneService timeZoneService;
     private final GetMainMenuHandler getMainMenuHandler;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public SelectTimezoneHandler(LocaleMessageService localeMessageService, UserService userService, TimeZoneService timeZoneService,
-                                 GetMainMenuHandler getMainMenuHandler) {
+                                 GetMainMenuHandler getMainMenuHandler, ApplicationEventPublisher applicationEventPublisher) {
         this.localeMessageService = localeMessageService;
         this.userService = userService;
         this.timeZoneService = timeZoneService;
         this.getMainMenuHandler = getMainMenuHandler;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
 
@@ -48,6 +52,7 @@ public class SelectTimezoneHandler implements InputMessageHandler{
             userService.saveUserTimezoneUtc(userId,message.getText());
             BotState botState = BotState.GET_MAIN_MENU;
             userService.saveBotState(userId,botState);
+            applicationEventPublisher.publishEvent(new MessageToSendEvent(this,userId,localeMessageService.getMessage("reply.timeZoneSelected",userLocale)));
             replyToUser = getMainMenuHandler.handle(message);
 
         } else {

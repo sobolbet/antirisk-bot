@@ -67,6 +67,12 @@ public class UserEntity {
     @Column (name = "timezone_utc")
     private String timezoneUtc;
 
+    @Column (name = "bank_start")
+    private Double bankStart;
+
+    @Column (name = "bank_now")
+    private Double bankNow;
+
    /* @OneToMany (mappedBy = "userEntity")
     private List<PaymentEntity> paymentsList;*/
 
@@ -88,6 +94,22 @@ public class UserEntity {
         this.paymentsList = paymentsList;
     }*/
 
+
+    public Double getBankStart() {
+        return bankStart;
+    }
+
+    public void setBankStart(Double bankStart) {
+        this.bankStart = bankStart;
+    }
+
+    public Double getBankNow() {
+        return bankNow;
+    }
+
+    public void setBankNow(Double bankNow) {
+        this.bankNow = bankNow;
+    }
 
     public String getTimezoneUtc() {
         return timezoneUtc;

@@ -1,11 +1,13 @@
 package com.worldbet.antirisk_bot.handlers;
 
 import com.worldbet.antirisk_bot.db.BotState;
+import com.worldbet.antirisk_bot.db.MessageToSendEvent;
 import com.worldbet.antirisk_bot.db.UserEntity;
 import com.worldbet.antirisk_bot.services.LocaleMessageService;
 import com.worldbet.antirisk_bot.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -21,14 +23,17 @@ public class InputTimeHandler2 implements InputMessageHandler{
 private final UserService userService;
 private final LocaleMessageService localeMessageService;
 private final GetMainMenuHandler getMainMenuHandler;
+private final ApplicationEventPublisher applicationEventPublisher;
 
 private final static Logger log = LoggerFactory.getLogger(InputTimeHandler2.class);
 
-public InputTimeHandler2(UserService userService, LocaleMessageService localeMessageService, GetMainMenuHandler getMainMenuHandler) {
+public InputTimeHandler2(UserService userService, LocaleMessageService localeMessageService,
+                         GetMainMenuHandler getMainMenuHandler, ApplicationEventPublisher applicationEventPublisher) {
 
     this.userService = userService;
     this.localeMessageService = localeMessageService;
     this.getMainMenuHandler = getMainMenuHandler;
+    this.applicationEventPublisher = applicationEventPublisher;
 }
 
 
@@ -61,7 +66,9 @@ public InputTimeHandler2(UserService userService, LocaleMessageService localeMes
             BotState botState = BotState.GET_MAIN_MENU;
             userService.saveUserTimeJob(userId,message.getText());
             userService.saveBotState(userId,botState);
-            replyToUser.setText(localeMessageService.getMessage("reply.time1Selected",userLocale));
+            //replyToUser.setText(localeMessageService.getMessage("reply.time1Selected",userLocale));
+            applicationEventPublisher.publishEvent(new MessageToSendEvent(this,userId ,
+                    localeMessageService.getMessage("reply.timeWorkSet",userLocale) ));
             replyToUser = getMainMenuHandler.handle(message);
             log.info("Конец IF");
         }

@@ -6,6 +6,7 @@ import com.worldbet.antirisk_bot.db.UserEntity;
 import com.worldbet.antirisk_bot.db.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 
@@ -53,21 +54,49 @@ public class UserService {
     }
 
 
+    public void saveUserTrial (Long userId, boolean trial){
+        UserEntity user = userRepository.findUserByChatId(userId.toString());
+        user.setTrial(trial);
+        userRepository.save(user);
+    }
+
+    public void saveUserDateTrial (Long userId, LocalDateTime startDt){
+        UserEntity user = userRepository.findUserByChatId(userId.toString());
+        user.setTrialStartDt(startDt);
+        LocalDateTime endDt = startDt.plusMonths(2);
+        user.setTrialEndDt(endDt);
+        userRepository.save(user);
+    }
+
+
     public void saveUserTimezone (Long userId, String timeZone){
         UserEntity user = userRepository.findUserByChatId(userId.toString());
         user.setTimeZone(timeZone);
         userRepository.save(user);
     }
 
-    public void saveUserLocalTime (Long userId, String localTime){
+    public void saveUserLocalTime (Long userId, LocalTime sourceLocalTime, LocalTime mscLocalTime){
         UserEntity user = userRepository.findUserByChatId(userId.toString());
-        user.setLocalTime(LocalTime.parse(localTime));
+        user.setLocalTime(sourceLocalTime);
+        user.setMoscowTime(mscLocalTime);
         userRepository.save(user);
     }
 
     public void saveUserTimeJob (Long userId, String timeJob){
         UserEntity user = userRepository.findUserByChatId(userId.toString());
         user.setTimeJob(Long.parseLong(timeJob));
+        userRepository.save(user);
+    }
+
+    public void saveUserBank (Long userId, Double bankStart){
+        UserEntity user = userRepository.findUserByChatId(userId.toString());
+        user.setBankStart(bankStart);
+        userRepository.save(user);
+    }
+
+    public void updateCurrentUserBank (Long userId, Double bankStart){
+        UserEntity user = userRepository.findUserByChatId(userId.toString());
+        user.setBankNow(bankStart);
         userRepository.save(user);
     }
 
