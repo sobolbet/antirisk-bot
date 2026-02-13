@@ -1,14 +1,12 @@
 package com.worldbet.antirisk_bot.services;
 
 import com.worldbet.antirisk_bot.db.BotState;
-//import com.worldbet.antirisk_bot.db.PaymentRepository;
 import com.worldbet.antirisk_bot.db.UserEntity;
 import com.worldbet.antirisk_bot.db.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Optional;
 
 @Service
 public class UserService {

@@ -58,8 +58,8 @@ public class UserEntity {
     @Column (name = "update_date")
     private LocalDateTime updateDt;
 
-    @Column (name = "strategy_id")
-    private Integer strategyId;
+    /*@Column (name = "strategy_id")
+    private Integer strategyId;*/
 
     @Column (name = "locale")
     private String locale;
@@ -73,6 +73,10 @@ public class UserEntity {
     @Column (name = "bank_now")
     private Double bankNow;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "strategy_id")
+    private StrategyEntity strategy;
+
    /* @OneToMany (mappedBy = "userEntity")
     private List<PaymentEntity> paymentsList;*/
 
@@ -84,6 +88,8 @@ public class UserEntity {
         this.userName = userName;
         this.chatId = chatId;
     }
+
+
 
 
  /*   public List<PaymentEntity> getPaymentsList() {
@@ -239,11 +245,12 @@ public class UserEntity {
         this.updateDt = updateDt;
     }
 
-    public Integer getStrategyId() {
-        return strategyId;
+
+    public StrategyEntity getStrategy() {
+        return strategy;
     }
 
-    public void setStrategyId(Integer strategyId) {
-        this.strategyId = strategyId;
+    public void setStrategy(StrategyEntity strategy) {
+        this.strategy = strategy;
     }
 }

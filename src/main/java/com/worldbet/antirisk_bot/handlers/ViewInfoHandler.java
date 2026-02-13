@@ -46,7 +46,7 @@ public class ViewInfoHandler implements InputMessageHandler {
 
         String timeStr = optionalTime.map(time -> time.format(formatter)).orElse("null");
 
-        Object[] args = new Object[] {user.getChatId(), user.getStrategyId(), timeStr ,
+        Object[] args = new Object[] {user.getChatId(), user.getStrategy().getId(), timeStr ,
                 user.getTimeJob(), user.getBankStart(), user.getBankNow()};
 
         replyToUser.setChatId(userId);
