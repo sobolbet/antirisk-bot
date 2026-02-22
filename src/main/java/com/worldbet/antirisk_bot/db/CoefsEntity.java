@@ -333,4 +333,40 @@ public class CoefsEntity {
     public void setCreateDt(LocalDateTime createDt) {
         this.createDt = createDt;
     }
+
+    @Override
+    public String toString() {
+        return "CoefsEntity{" +
+                "id=" + id +
+                ", p1m=" + p1m +
+                ", p2m=" + p2m +
+                ", p1r=" + p1r +
+                ", p2r=" + p2r +
+                ", fat=" + fat +
+                ", brut=" + brut +
+                ", rut=" + rut +
+                ", minTT=" + minTT +
+                ", tbMinTime=" + tbMinTime +
+                ", tmMinTime=" + tmMinTime +
+                ", midTT=" + midTT +
+                ", tbMidTime=" + tbMidTime +
+                ", tmMidTime=" + tmMidTime +
+                ", maxTT=" + maxTT +
+                ", tbMaxTime=" + tbMaxTime +
+                ", tmMaxTime=" + tmMaxTime +
+                ", fatYes=" + fatYes +
+                ", fatNo=" + fatNo +
+                ", fw=" + fw +
+                ", quantityRMinVal=" + quantityRMinVal +
+                ", quantityRMidVal=" + quantityRMidVal +
+                ", quantityRMaxVal=" + quantityRMaxVal +
+                ", tbQuantityRMin=" + tbQuantityRMin +
+                ", tbQuantityRMid=" + tbQuantityRMid +
+                ", tbQuantityRMax=" + tbQuantityRMax +
+                ", tmQuantityRMin=" + tmQuantityRMin +
+                ", tmQuantityRMid=" + tmQuantityRMid +
+                ", tmQuantityRMax=" + tmQuantityRMax +
+                ", createDt=" + createDt +
+                '}';
+    }
 }

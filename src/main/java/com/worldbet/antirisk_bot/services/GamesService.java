@@ -74,7 +74,8 @@ public class GamesService {
                 && Objects.equals(game.getR6Time(),gameDto.getR6Time())
                 && Objects.equals(game.getR7Time(),gameDto.getR7Time())
                 && Objects.equals(game.getR8Time(),gameDto.getR8Time())
-                && Objects.equals(game.getR9Time(),gameDto.getR9Time());
+                && Objects.equals(game.getR9Time(),gameDto.getR9Time())
+                && Objects.equals(game.getGameWasEnd(),gameDto.getGameWasEnd());
 
     }
 
@@ -109,6 +110,7 @@ public class GamesService {
                 game.setR7Time(gameDto.getR7Time());
                 game.setR8Time(gameDto.getR8Time());
                 game.setR9Time(gameDto.getR9Time());
+                game.setGameWasEnd(gameDto.getGameWasEnd());
 
                 gamesRepository.save(game);
     }
