@@ -3,6 +3,8 @@ package com.worldbet.antirisk_bot.db;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.ArrayList;
+
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
 
@@ -17,6 +19,9 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query (value = "select * from users.users as u where u.chat_id = :chatId", nativeQuery = true)
     UserEntity findUserByChatId(String chatId);
+
+    @Query (value = "select u from UserEntity u where u.state = :botState")
+    ArrayList<UserEntity> getUserByBotStateEqlTimerAtWork (BotState botState);
 
    /*@Transactional
     @Modifying

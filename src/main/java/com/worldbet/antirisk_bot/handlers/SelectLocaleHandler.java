@@ -51,6 +51,7 @@ public class SelectLocaleHandler implements InputMessageHandler{
 
 
 
+
         if (localeList.contains(message.getText())){
             userService.saveUserLocale(userId,message.getText());
             BotState botState = BotState.GET_MAIN_MENU;

@@ -1,6 +1,7 @@
 package com.worldbet.antirisk_bot.controllers;
 
 import com.worldbet.antirisk_bot.services.MessageService;
+import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -15,9 +16,11 @@ public class AntiRiskBotCore extends TelegramLongPollingBot {
 
     MessageService messageService;
 
-    public AntiRiskBotCore (MessageService messageService) {
+    public AntiRiskBotCore (MessageService messageService, DefaultBotOptions options) {
 
+        super(options);
         this.messageService = messageService;
+
     }
 
     /*@Autowired
@@ -103,4 +106,5 @@ public class AntiRiskBotCore extends TelegramLongPollingBot {
     public void setBotToken(String botToken) {
         this.botToken = botToken;
     }
+
 }

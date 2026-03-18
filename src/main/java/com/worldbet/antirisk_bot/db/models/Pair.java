@@ -131,4 +131,25 @@ public class Pair {
     public void setLessCoefR(Boolean lessCoefR) {
         this.lessCoefR = lessCoefR;
     }
+
+    @Override
+    public String toString() {
+        return "Pair{" +
+                "f1='" + f1 + '\'' +
+                ", f2='" + f2 + '\'' +
+                ", typeWin='" + typeWin + '\'' +
+                ", resTimeType='" + resTimeType + '\'' +
+                ", coefF=" + coefF +
+                ", moreCoefF=" + moreCoefF +
+                ", lessCoefF=" + lessCoefF +
+                ", coefB=" + coefB +
+                ", moreCoefB=" + moreCoefB +
+                ", lessCoefB=" + lessCoefB +
+                ", coefR=" + coefR +
+                ", moreCoefR=" + moreCoefR +
+                ", lessCoefR=" + lessCoefR +
+                '}';
+    }
 }
+
+

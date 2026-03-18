@@ -123,7 +123,7 @@ public class MessageService {
                     botState = BotState.INPUT_START_BANK;
                     break;
                 case SELECT_STRATEGY:
-                    botState = BotState.CHOICE_STRATEGY;
+                    botState = BotState.GET_STRATEGIES;
                     break;
                 case SHOW_INFO:
                     botState = BotState.SHOW_INFO;

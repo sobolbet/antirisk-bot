@@ -1,12 +1,14 @@
 package com.worldbet.antirisk_bot.services;
 
 import com.worldbet.antirisk_bot.db.BotState;
+import com.worldbet.antirisk_bot.db.StrategyEntity;
 import com.worldbet.antirisk_bot.db.UserEntity;
 import com.worldbet.antirisk_bot.db.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 @Service
 public class UserService {
@@ -92,6 +94,13 @@ public class UserService {
         userRepository.save(user);
     }
 
+
+    public void saveUserStrategy (Long userId, StrategyEntity strategy){
+        UserEntity user = userRepository.findUserByChatId(userId.toString());
+        user.setStrategy(strategy);
+        userRepository.save(user);
+    }
+
     public void updateCurrentUserBank (Long userId, Double bankStart){
         UserEntity user = userRepository.findUserByChatId(userId.toString());
         user.setBankNow(bankStart);
@@ -104,6 +113,11 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public ArrayList<UserEntity> getUsersByStateEqlTimerAtWork (BotState state) {
+        ArrayList<UserEntity> listUsers = userRepository.getUserByBotStateEqlTimerAtWork(state);
+
+        return listUsers;
+    }
 
 
     public void save (String userName, Long chatId) {

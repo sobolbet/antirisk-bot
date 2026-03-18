@@ -239,7 +239,8 @@ public class KeyboardsService {
     }
 
 
-    public ReplyKeyboardMarkup getListStartegy (String chat_id) {
+
+    public ReplyKeyboardMarkup getListStartegy () {
 
 
         final ReplyKeyboardMarkup replyKeyboard = new ReplyKeyboardMarkup();
@@ -255,9 +256,9 @@ public class KeyboardsService {
 
         //KeyboardRow row5 = new KeyboardRow();
         //KeyboardRow row6 = new KeyboardRow();
-        row1.add(new KeyboardButton("Догон до 3-го (№1)"));
-        row2.add(new KeyboardButton("Флет до 5-го (№1)"));
-        row3.add(new KeyboardButton("ФБ до 3-го (№1)"));
+        row1.add(new KeyboardButton("DOGON_3_ROUNDS"));
+        row2.add(new KeyboardButton("FLET_5_ROUNDS"));
+        row3.add(new KeyboardButton("FB_3_ROUNDS"));
         //row4.add(new KeyboardButton(""));
         keyBoard.add(row1);
         keyBoard.add(row2);

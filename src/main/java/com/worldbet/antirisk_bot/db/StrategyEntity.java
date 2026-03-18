@@ -3,6 +3,8 @@ package com.worldbet.antirisk_bot.db;
 import com.worldbet.antirisk_bot.db.models.StrategyParams;
 import com.worldbet.antirisk_bot.services.StrategyParamsJsonbConverter;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "strategies",schema = "users")
@@ -17,8 +19,9 @@ public class StrategyEntity {
     @Column(name = "strategy_name", nullable = false,unique = true)
     private String name;
 
-    @Column(name = "params", columnDefinition = "jsonb", nullable = false)
-    @Convert(converter = StrategyParamsJsonbConverter.class)
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "params"/*, columnDefinition = "jsonb"*/, nullable = false)
+    //@Convert(converter = StrategyParamsJsonbConverter.class)
     private StrategyParams strategyParams;
 
 
