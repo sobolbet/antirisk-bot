@@ -75,6 +75,8 @@ public class GameDto {
 
     private Integer r9Time;
 
+    private Integer roundNumNow;
+
 
     public String getEventId() {
         return eventId;
@@ -346,5 +348,13 @@ public class GameDto {
 
     public void setR9Time(Integer r9Time) {
         this.r9Time = r9Time;
+    }
+
+    public Integer getRoundNumNow() {
+        return roundNumNow;
+    }
+
+    public void setRoundNumNow(Integer roundNumNow) {
+        this.roundNumNow = roundNumNow;
     }
 }

@@ -4,10 +4,14 @@ package com.worldbet.antirisk_bot.services;
 import com.worldbet.antirisk_bot.db.GameEntity;
 import com.worldbet.antirisk_bot.db.GamesRepository;
 import com.worldbet.antirisk_bot.db.models.GameDto;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -33,9 +37,9 @@ public class GamesService {
     }
 
 
-    public GameEntity getOrCreateGame (String eventId, LocalDate dateEv, LocalTime timeEv, String f1, String f2) {
+    public GameEntity getOrCreateGame (String eventId, LocalDate dateEv,String gameNum, LocalTime timeEv, String f1, String f2) {
 
-        return gamesRepository.findByEventIdAndDateEv(eventId,dateEv).orElseGet(() -> gamesRepository.save(new GameEntity(eventId, timeEv, dateEv, f1, f2)));
+        return gamesRepository.findByEventIdAndDateEv(eventId,dateEv).orElseGet(() -> gamesRepository.save(new GameEntity(eventId, timeEv,gameNum, dateEv, f1, f2)));
     }
 
     public boolean equalsState (GameEntity game , GameDto gameDto) {
@@ -75,7 +79,9 @@ public class GamesService {
                 && Objects.equals(game.getR7Time(),gameDto.getR7Time())
                 && Objects.equals(game.getR8Time(),gameDto.getR8Time())
                 && Objects.equals(game.getR9Time(),gameDto.getR9Time())
+                && Objects.equals(game.getRoundNumNow(),gameDto.getRoundNumNow())
                 && Objects.equals(game.getGameWasEnd(),gameDto.getGameWasEnd());
+
 
     }
 
@@ -111,6 +117,8 @@ public class GamesService {
                 game.setR8Time(gameDto.getR8Time());
                 game.setR9Time(gameDto.getR9Time());
                 game.setGameWasEnd(gameDto.getGameWasEnd());
+                game.setUpdatedAt(LocalDateTime.now());
+                game.setRoundNumNow(gameDto.getRoundNumNow());
 
                 gamesRepository.save(game);
     }
@@ -118,6 +126,18 @@ public class GamesService {
     public void updateGame (GameEntity game) {
 
         gamesRepository.save(game);
+
+    }
+
+    @Transactional
+    public Optional<GameEntity> getGameByEventId (String eventId) {
+        return gamesRepository.findByEventId(eventId);
+    }
+
+    public ArrayList<GameEntity> getActiveGames (LocalDate date) {
+        LocalTime timeNow = LocalTime.now().plusMinutes(10);
+        LocalTime timeAgo = timeNow.minusMinutes(40);
+        return gamesRepository.findActiveGameInTimeRange(date,timeNow,timeAgo);
 
     }
 

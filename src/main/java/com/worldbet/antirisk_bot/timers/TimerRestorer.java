@@ -34,7 +34,7 @@ public class TimerRestorer {
         if (!users.isEmpty()) {
 
             for (UserEntity u : users) {
-                manager.scheduleUser(u.getId(), u.getMoscowTime(), u.getTimeJob());
+                manager.scheduleUser(u.getId(),Long.valueOf(u.getChatId()), u.getMoscowTime(), u.getTimeJob());
             }
 
         }

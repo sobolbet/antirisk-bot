@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -129,12 +130,19 @@ private Integer r8Time;
 @Column (name = "r9_time")
 private Integer r9Time;
 
+@Column (name = "updated_at")
+private LocalDateTime updatedAt;
+
+@Column (name = "round_num_now")
+private Integer roundNumNow;
+
 
     public GameEntity() {
     }
 
-    public GameEntity(String eventId, LocalTime timeEv, LocalDate dateEv, String f1, String f2) {
+    public GameEntity(String eventId, LocalTime timeEv, String gameNum, LocalDate dateEv, String f1, String f2) {
         this.eventId = eventId;
+        this.gameNum = gameNum;
         this.timeEv = timeEv;
         this.dateEv = dateEv;
         this.f1 = f1;
@@ -142,6 +150,8 @@ private Integer r9Time;
         this.totalF1 = 0;
         this.totalF2 = 0;
         this.gameWasEnd = false;
+        this.updatedAt = LocalDateTime.now();
+        this.roundNumNow = 0;
     }
 
 
@@ -489,5 +499,21 @@ private Integer r9Time;
 
     public void setR9Time(Integer r9Time) {
         this.r9Time = r9Time;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Integer getRoundNumNow() {
+        return roundNumNow;
+    }
+
+    public void setRoundNumNow(Integer roundNumNow) {
+        this.roundNumNow = roundNumNow;
     }
 }

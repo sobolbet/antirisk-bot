@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- ПУТЬ К ЛОГАМ (Windows диск G:) -->
+    <property name="LOG_PATH" value="G:/logs"/>
+
+    <!-- ===================== FILE APPENDER ===================== -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <!-- основной файл -->
+        <file>${LOG_PATH}/app.log</file>
+
+        <!-- ротация по размеру -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+
+            <!-- архивы -->
+            <fileNamePattern>${LOG_PATH}/app-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+
+            <!-- макс размер одного файла -->
+            <maxFileSize>200MB</maxFileSize>
+
+            <!-- максимум архивов -->
+            <maxHistory>5</maxHistory>
+
+            <!-- общий лимит (дополнительно защита) -->
+            <totalSizeCap>1GB</totalSizeCap>
+
+        </rollingPolicy>
+
+        <!-- формат логов -->
+        <encoder>
+            <pattern>
+                %d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+
+    </appender>
+
+    <!-- ===================== CONSOLE ===================== -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %d{HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <!-- ===================== ROOT LOGGER ===================== -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>

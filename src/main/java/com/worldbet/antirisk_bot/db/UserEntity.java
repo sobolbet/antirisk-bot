@@ -73,7 +73,8 @@ public class UserEntity {
     @Column (name = "bank_now")
     private Double bankNow;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    //@ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "strategy_id")
     private StrategyEntity strategy;
 

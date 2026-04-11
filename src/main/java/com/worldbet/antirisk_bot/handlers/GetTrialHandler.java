@@ -52,6 +52,7 @@ public class GetTrialHandler implements InputMessageHandler{
     @Transactional
     public SendMessage handle(Message message) {
 
+
         Long userId = message.getChatId();
         UserEntity user = userService.findUserById(userId);
         SendMessage replyToUser = new SendMessage();

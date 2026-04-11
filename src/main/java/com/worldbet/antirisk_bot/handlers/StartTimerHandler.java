@@ -44,7 +44,7 @@ public class StartTimerHandler implements InputMessageHandler{
         BotState botState = BotState.TIMER_AT_WORK;
         userService.saveBotState(userId,botState);
 
-        manager.scheduleUser(user.getId(),user.getMoscowTime(),user.getTimeJob());
+        manager.scheduleUser(user.getId(),Long.valueOf(user.getChatId()),user.getMoscowTime(),user.getTimeJob());
 
 
 

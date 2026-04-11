@@ -108,11 +108,12 @@ public class EventParsService {
         log.info("TimeEv = " + timeEv.toString());
 
 
+        String gameNum = root.path("dopInfo").asText();
         String f1 = root.path("opponent1").path("fullName").asText();
         String f2 = root.path("opponent2").path("fullName").asText();
 
         if (!gamesService.existByEventId(eventId)) {
-            GameEntity gameEntity = new GameEntity(eventId,timeEv,dateEv,f1,f2);
+            GameEntity gameEntity = new GameEntity(eventId,timeEv,gameNum,dateEv,f1,f2);
             gamesService.updateGame(gameEntity);
 
 
@@ -163,6 +164,7 @@ public class EventParsService {
 
         gameDto.setEventId(root.path("id").asText());
         gameDto.setGameNum(root.path("dopInfo").asText());
+        gameDto.setRoundNumNow(root.path("scores").path("currentPeriod").asInt());
         gameDto.setF1(root.path("opponent1").path("fullName").asText());
         gameDto.setF2(root.path("opponent2").path("fullName").asText());
         gameDto.setTotalF1(root.path("scores").path("fullScoreDetail").path("scoreOpp1").asInt());
