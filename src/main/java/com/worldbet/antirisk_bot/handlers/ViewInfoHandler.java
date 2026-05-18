@@ -1,6 +1,7 @@
 package com.worldbet.antirisk_bot.handlers;
 
 import com.worldbet.antirisk_bot.db.BotState;
+import com.worldbet.antirisk_bot.db.StrategyEntity;
 import com.worldbet.antirisk_bot.db.UserEntity;
 import com.worldbet.antirisk_bot.services.LocaleMessageService;
 import com.worldbet.antirisk_bot.services.UserService;
@@ -46,7 +47,11 @@ public class ViewInfoHandler implements InputMessageHandler {
 
         String timeStr = optionalTime.map(time -> time.format(formatter)).orElse("null");
 
-        Object[] args = new Object[] {user.getChatId(), user.getStrategy().getId(), timeStr ,
+        Optional<StrategyEntity> userStrategy = Optional.ofNullable(user.getStrategy());
+
+        String strategyName = userStrategy.map(StrategyEntity::getName).orElse("-");
+
+        Object[] args = new Object[] {user.getChatId(), strategyName, timeStr ,
                 user.getTimeJob(), user.getBankStart(), user.getBankNow()};
 
         replyToUser.setChatId(userId);

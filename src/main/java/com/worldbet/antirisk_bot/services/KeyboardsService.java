@@ -256,9 +256,9 @@ public class KeyboardsService {
 
         //KeyboardRow row5 = new KeyboardRow();
         //KeyboardRow row6 = new KeyboardRow();
-        row1.add(new KeyboardButton("DOGON_3_ROUNDS"));
-        row2.add(new KeyboardButton("FLET_5_ROUNDS"));
-        row3.add(new KeyboardButton("FB_3_ROUNDS"));
+        row1.add(new KeyboardButton("FAT_DOGON_3_ROUNDS"));
+        row2.add(new KeyboardButton("FAT_FLET_5_ROUNDS"));
+        row3.add(new KeyboardButton("FAT_FB_3_ROUNDS"));
         //row4.add(new KeyboardButton(""));
         keyBoard.add(row1);
         keyBoard.add(row2);

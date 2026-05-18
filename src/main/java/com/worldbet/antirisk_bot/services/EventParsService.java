@@ -110,19 +110,25 @@ public class EventParsService {
 
         String gameNum = root.path("dopInfo").asText();
         String f1 = root.path("opponent1").path("fullName").asText();
+        f1 = f1.replaceAll(" ","");
+        f1 = f1.replaceAll("'","");
+        f1 = f1.replaceAll("-", "");
         String f2 = root.path("opponent2").path("fullName").asText();
-
+        f2 = f2.replaceAll(" ","");
+        f2 = f2.replaceAll("'","");
+        f2 = f2.replaceAll("-", "");
         if (!gamesService.existByEventId(eventId)) {
             GameEntity gameEntity = new GameEntity(eventId,timeEv,gameNum,dateEv,f1,f2);
             gamesService.updateGame(gameEntity);
 
-
+            log.info("Обновил событие в БД впервые eventId = " + eventId);
 
 
 
             CoefsEntity coefsEntity = new CoefsEntity();
             coefsService.apply(coefsEntity, parseCoefsToDto(eventId,root),gameEntity);
 
+            log.info("Обновил кэфы события в БД впервые eventId = " + eventId);
 
 
 
@@ -148,7 +154,7 @@ public class EventParsService {
 
         CoefDto coefDto = parseCoefsToDto(eventId,root);
 
-        log.info("Перед сравнением");
+        log.info("Перед сравнением eventId = " + eventId);
 
         log.info(coefsSource.toString());
         log.info(coefDto.toString());
@@ -156,6 +162,8 @@ public class EventParsService {
         if (!coefsService.equalsState(coefsSource,coefDto)) {
             CoefsEntity coefsNew = new CoefsEntity();
             coefsService.apply(coefsNew,coefDto,game);
+
+            log.info("Добавил новые кэфы события eventId = " + eventId);
         }
 
         //todo: добавить условие для сравнения и прасинга кэфов
@@ -165,11 +173,28 @@ public class EventParsService {
         gameDto.setEventId(root.path("id").asText());
         gameDto.setGameNum(root.path("dopInfo").asText());
         gameDto.setRoundNumNow(root.path("scores").path("currentPeriod").asInt());
-        gameDto.setF1(root.path("opponent1").path("fullName").asText());
-        gameDto.setF2(root.path("opponent2").path("fullName").asText());
-        gameDto.setTotalF1(root.path("scores").path("fullScoreDetail").path("scoreOpp1").asInt());
-        gameDto.setTotalF2(root.path("scores").path("fullScoreDetail").path("scoreOpp2").asInt());
+        String f1 = root.path("opponent1").path("fullName").asText();
+        f1 = f1.replaceAll(" ","");
+        f1 = f1.replaceAll("'","");
+        f1 = f1.replaceAll("-", "");
+        gameDto.setF1(f1);
+        String f2 = root.path("opponent2").path("fullName").asText();
+        f2 = f2.replaceAll(" ","");
+        f2 = f2.replaceAll("'","");
+        f2 = f2.replaceAll("-", "");
+        gameDto.setF2(f2);
+
+        Integer score1 = root.path("scores").path("fullScoreDetail").path("scoreOpp1").asInt();
+        Integer score2 = root.path("scores").path("fullScoreDetail").path("scoreOpp2").asInt();
+
+        gameDto.setTotalF1(score1);
+        gameDto.setTotalF2(score2);
+
         gameDto.setGameWasEnd(!root.path("scores").path("timer").path("timeRun").asBoolean());
+
+        if (score1==5 || score2==5 ) {
+            gameDto.setGameWasEnd(true);
+        }
 
         int statArrSize = root.path("scores").path("statisticJson").path("RoundTable").size();
 
@@ -217,8 +242,16 @@ public class EventParsService {
 
         // дописать парсинг статистики
 
+
+        log.info("Перед сравнением энтити game c game dto");
+        log.info(game.toString());
+        log.info(gameDto.toString());
+
+
         if (!gamesService.equalsState(game,gameDto)) {
             gamesService.apply(game,gameDto);
+
+            log.info("Обновил событие в БД eventId = " + eventId);
         }
 
 
@@ -233,6 +266,8 @@ public class EventParsService {
         JsonNode groupsArr = root.path("eventGroups");
 
         CoefDto coefs = new CoefDto();
+
+        coefs.setRoundNum(root.path("scores").path("currentPeriod").asInt());
 
         for (JsonNode group : groupsArr) {
 

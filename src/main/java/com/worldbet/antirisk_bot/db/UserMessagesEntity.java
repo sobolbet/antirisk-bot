@@ -35,18 +35,23 @@ public class UserMessagesEntity {
     @Column(name = "last_update_at")
     private LocalDateTime lastUpdateAt;
 
+    @Column(name = "event_focus")
+    private Integer eventFocus;
+
     public UserMessagesEntity() {
         // обязательно пустой конструктор
     }
 
 
-    public UserMessagesEntity( UserEntity user, String chatId, Integer messageId, String eventId, Integer roundNumNow, LocalDateTime lastUpdateAt) {
+    public UserMessagesEntity( UserEntity user, String chatId, Integer messageId, String eventId, Integer roundNumNow,
+                               LocalDateTime lastUpdateAt, Integer eventFocus) {
         this.user = user;
         this.chatId = chatId;
         this.messageId = messageId;
         this.eventId = eventId;
         this.roundNumNow = roundNumNow;
         this.lastUpdateAt = lastUpdateAt;
+        this.eventFocus = eventFocus;
     }
 
     public UUID getId() {
@@ -103,5 +108,13 @@ public class UserMessagesEntity {
 
     public void setLastUpdateAt(LocalDateTime lastUpdateAt) {
         this.lastUpdateAt = lastUpdateAt;
+    }
+
+    public Integer getEventFocus() {
+        return eventFocus;
+    }
+
+    public void setEventFocus(Integer eventFocus) {
+        this.eventFocus = eventFocus;
     }
 }

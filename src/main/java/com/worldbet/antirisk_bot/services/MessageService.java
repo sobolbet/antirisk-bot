@@ -61,36 +61,59 @@ public class MessageService {
         Message message = update.getMessage();
         Long userId = message.getFrom().getId();
         String inputMessage = message.getText();
+        UserEntity user = userService.findUserById(userId);
 
         if (!userService.isUserExisted(userId)) {
             userService.save(message.getFrom().getUserName(),userId);
         }
 
-        BotState botState = determineState(inputMessage,userId);
+        Locale userLocale;
 
-        log.info("до " +  botState);
+        if (user.getLocale()!= null) {
 
+            userLocale = Locale.forLanguageTag(user.getLocale());
 
-        if (botState != null) {
-
-            if (botState.equals(BotState.INIT_STATE) && userService.findUserById(userId).getLocale()==null) {
-                botState = BotState.INPUT_LOCALE;
-            } else if (botState.equals(BotState.INIT_STATE) && userService.findUserById(userId).getLocale()!=null){
-                botState = BotState.GET_MAIN_MENU;
-            }
-            userService.saveBotState(userId,botState);
+        } else {
+          userLocale = Locale.forLanguageTag(UserLocale.RU.getLocale());
         }
 
 
-        BotState currentState = userService.getCurrentBotState(userId);
+        BotCommand command = commandLocalizationService.resolveCommand(inputMessage,userLocale);
 
-        log.info("после " +  currentState);
+        if (user.getState().equals(BotState.TIMER_AT_WORK) && !command.equals(STOP_TIMER)) {
+
+            reply = new SendMessage();
+            reply.setChatId(userId);
+            reply.setText(localeMessageService.getMessage("reply.pleaseStopTimer",userLocale));
 
 
+        } else {
+            //todo дописать логику , что бы нельзя было трогать другие кнопки , если уже запущен
+
+            BotState botState = determineState(inputMessage, userId, user);
+
+            log.info("до " + botState);
 
 
-        reply = botStateContext.processInputMessage(currentState,message);
+            if (botState != null) {
 
+                if (botState.equals(BotState.INIT_STATE) && userService.findUserById(userId).getLocale() == null) {
+                    botState = BotState.INPUT_LOCALE;
+                } else if (botState.equals(BotState.INIT_STATE) && userService.findUserById(userId).getLocale() != null) {
+                    botState = BotState.GET_MAIN_MENU;
+                }
+                userService.saveBotState(userId, botState);
+            }
+
+
+            BotState currentState = userService.getCurrentBotState(userId);
+
+            log.info("после " + currentState);
+
+
+            reply = botStateContext.processInputMessage(currentState, message);
+
+        }
         /*reply = new SendMessage();
         reply.setChatId(userId);
         reply.setText(currentState.toString() + " ");*/
@@ -100,10 +123,18 @@ public class MessageService {
     }
 
 
-    private BotState determineState (String inputMessage,Long userId) {
+    private BotState determineState (String inputMessage,Long userId, UserEntity user) {
 
 
-        Locale userLocale = Locale.forLanguageTag(UserLocale.RU.getLocale());
+        Locale userLocale;
+
+        if (user.getLocale()!= null) {
+
+            userLocale = Locale.forLanguageTag(user.getLocale());
+
+        } else {
+            userLocale = Locale.forLanguageTag(UserLocale.RU.getLocale());
+        }
 
         BotCommand command = commandLocalizationService.resolveCommand(inputMessage,userLocale);
 

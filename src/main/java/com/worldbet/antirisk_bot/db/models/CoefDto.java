@@ -37,6 +37,7 @@ public class CoefDto {
     private BigDecimal tmQuantityRMin;
     private BigDecimal tmQuantityRMid;
     private BigDecimal tmQuantityRMax;
+    private Integer roundNum;
 
 
     @Override
@@ -70,6 +71,7 @@ public class CoefDto {
                 ", tmQuantityRMin=" + tmQuantityRMin +
                 ", tmQuantityRMid=" + tmQuantityRMid +
                 ", tmQuantityRMax=" + tmQuantityRMax +
+                ", roundNum=" + roundNum +
                 '}';
     }
 
@@ -223,6 +225,14 @@ public class CoefDto {
 
     public void setFw(BigDecimal fw) {
         this.fw = fw.setScale(3, RoundingMode.HALF_UP);
+    }
+
+    public Integer getRoundNum() {
+        return roundNum;
+    }
+
+    public void setRoundNum(Integer roundNum) {
+        this.roundNum = roundNum;
     }
 
     public BigDecimal getQuantityRMinVal() {

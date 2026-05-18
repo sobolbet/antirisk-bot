@@ -95,7 +95,14 @@ public class UserSessionManager {
     private final SenderEvToTGService sender;
     private final Logger log = LoggerFactory.getLogger(UserSessionManager.class);
 
+    // 1. Храним ТРИГГЕРЫ КРОНА (планирование старта)
+    private final Map<UUID, ScheduledFuture<?>> scheduledCronTasks = new ConcurrentHashMap<>();
+
+    // 2. Храним ЗАПУЩЕННЫЕ СЕССИИ (отправка сообщений каждые 5 секунд)
     private final Map<UUID, ScheduledFuture<?>> activeSessions = new ConcurrentHashMap<>();
+
+    // 3. Храним ТАСКИ АВТООСТАНОВКИ (чтобы старая остановка не сломала новую сессию)
+    private final Map<UUID, ScheduledFuture<?>> autoStopTasks = new ConcurrentHashMap<>();
 
     public UserSessionManager(TaskScheduler scheduler,
                               SenderEvToTGService sender) {
@@ -107,17 +114,23 @@ public class UserSessionManager {
      * Планируем старт сессии по cron
      */
     public void scheduleUser(UUID userId, Long chatId, LocalTime startTime, long hours) {
+        // Отменяем старый Cron, если он был
+        ScheduledFuture<?> oldCron = scheduledCronTasks.remove(userId);
+        if (oldCron != null) {
+            oldCron.cancel(false);
+        }
 
         String cron = String.format("%d %d %d * * *",
                 startTime.getSecond(),
                 startTime.getMinute(),
                 startTime.getHour());
 
-        scheduler.schedule(
+        ScheduledFuture<?> cronFuture = scheduler.schedule(
                 () -> startSession(userId, chatId, hours),
                 new CronTrigger(cron)
         );
 
+        scheduledCronTasks.put(userId, cronFuture);
         log.info("User {} scheduled with cron {}", userId, cron);
     }
 
@@ -125,16 +138,13 @@ public class UserSessionManager {
      * Старт сессии (ОДНА задача на пользователя)
      */
     private void startSession(UUID userId, Long chatId, long hours) {
-
-        // защита от дублей
-        if (activeSessions.containsKey(userId)) {
-            log.warn("Session already running for user {}", userId);
-            return;
-        }
+        // Гарантированно чистим всё: и старую сессию, и старый таймер автоостановки
+        stopSession(userId);
 
         log.info("Starting session for user {}", userId);
 
-        ScheduledFuture<?> future = scheduler.scheduleWithFixedDelay(
+        // Запуск спама каждые 5 секунд
+        ScheduledFuture<?> sessionFuture = scheduler.scheduleWithFixedDelay(
                 () -> {
                     try {
                         processUser(chatId);
@@ -142,12 +152,18 @@ public class UserSessionManager {
                         log.error("Error processing user {}", chatId, e);
                     }
                 },
-                Duration.ofSeconds(10)
+                Duration.ofSeconds(5)
         );
+        activeSessions.put(userId, sessionFuture);
 
-        activeSessions.put(userId, future);
-
-
+        // Планируем ОДНОРАЗОВУЮ авто-остановку
+        Instant stopTime = Instant.now().plus(hours, ChronoUnit.HOURS);
+        ScheduledFuture<?> stopFuture = scheduler.schedule(
+                () -> stopSession(userId),
+                stopTime
+        );
+        // Запоминаем её, чтобы иметь возможность отменить
+        autoStopTasks.put(userId, stopFuture);
     }
 
     /**
@@ -155,20 +171,29 @@ public class UserSessionManager {
      */
     private void processUser(Long chatId) {
         log.info("Processing user chatId={}", chatId);
-
         sender.sendEventToTG(chatId);
     }
 
     /**
-     * Остановка сессии
+     * Полная остановка и очистка всех ресурсов пользователя
      */
     public void stopSession(UUID userId) {
+        ScheduledFuture<?> sessionFuture = activeSessions.remove(userId);
+        if (sessionFuture != null) {
+            sessionFuture.cancel(false);
+        }
 
-        ScheduledFuture<?> future = activeSessions.remove(userId);
+        // 2. Отменяем таску автоостановки
+        ScheduledFuture<?> stopFuture = autoStopTasks.remove(userId);
+        if (stopFuture != null) {
+            stopFuture.cancel(false);
+        }
 
-        if (future != null) {
-            future.cancel(false);
-            log.info("Session stopped for user {}", userId);
+        // НАДО ДОБАВИТЬ: Полностью удаляем ежедневное расписание Cron!
+        ScheduledFuture<?> cronFuture = scheduledCronTasks.remove(userId);
+        if (cronFuture != null) {
+            cronFuture.cancel(false);
+            log.info("Daily cron schedule permanently removed for user {}", userId);
         }
     }
 }

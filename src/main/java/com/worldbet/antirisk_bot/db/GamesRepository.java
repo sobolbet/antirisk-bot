@@ -22,7 +22,38 @@ public interface GamesRepository extends JpaRepository<GameEntity, Long> {
     @Query(value = "select g from GameEntity g where (g.f1 = :f1 and g.f2 = :f2 ) and g.gameWasEnd = false and g.roundNumNow is null")
     Optional<GameEntity> findByF1AndF2 (String f1, String f2);
 
-    @Query(value = "select g from GameEntity g where g.dateEv = :date and (g.timeEv between :timeAgo and :timeNow) and g.gameWasEnd = false and g.roundNumNow = 0")
-    ArrayList<GameEntity> findActiveGameInTimeRange(@Param("date") LocalDate date, @Param("timeNow")LocalTime timeNow, @Param("timeAgo") LocalTime timeAgo);
+    @Query(value = "select g from GameEntity g " +
+            "where g.gameWasEnd = false and g.roundNumNow = 0" +
+            "  and (" +
+            "    (:startDate = :endDate and g.dateEv = :startDate and g.timeEv between :startTime and :endTime)\n" +
+            "    or" +
+            "    (:startDate != :endDate and (" +
+            "        (g.dateEv = :startDate and g.timeEv >= :startTime) or " +
+            "        (g.dateEv = :endDate and g.timeEv <= :endTime) or" +
+            "        (g.dateEv > :startDate and g.dateEv < :endDate)" +
+            "    ))" +
+            "  )" +
+            "order by g.dateEv desc, g.timeEv desc")
+    ArrayList<GameEntity> findActiveGameInTimeRangeAndRoundNumEqlZero(@Param("startDate") LocalDate startDate,
+                                                                      @Param("endTime")LocalTime endTime,
+                                                                      @Param("startTime") LocalTime startTime,
+                                                                      @Param("endDate") LocalDate endDate);
+
+    @Query(value = "select g from GameEntity g " +
+            "where g.gameWasEnd = false " +
+            "  and (" +
+            "    (:startDate = :endDate and g.dateEv = :startDate and g.timeEv between :startTime and :endTime)\n" +
+            "    or" +
+            "    (:startDate != :endDate and (" +
+            "        (g.dateEv = :startDate and g.timeEv >= :startTime) or " +
+            "        (g.dateEv = :endDate and g.timeEv <= :endTime) or" +
+            "        (g.dateEv > :startDate and g.dateEv < :endDate)" +
+            "    ))" +
+            "  )" +
+            "order by g.dateEv desc, g.timeEv desc")
+    ArrayList<GameEntity> findActiveGameInTimeRange(@Param("startDate") LocalDate startDate,
+                                                    @Param("endTime")LocalTime endTime,
+                                                    @Param("startTime") LocalTime startTime,
+                                                    @Param("endDate") LocalDate endDate);
 
 }

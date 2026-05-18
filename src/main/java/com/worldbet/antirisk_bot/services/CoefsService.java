@@ -39,6 +39,7 @@ public class CoefsService {
 
         if (coefs == null) return false;
         if (coefDto == null) return false;
+        if (coefDto.getFat() == null && coefDto.getBrut()== null && coefDto.getRut()==null) return true;
 
         return Objects.equals(coefs.getFat(),coefDto.getFat())
                 && Objects.equals(coefs.getBrut(),coefDto.getBrut())
@@ -58,7 +59,8 @@ public class CoefsService {
                 && Objects.equals(coefs.getTbMinTime(),coefDto.getTbMinTime())
                 && Objects.equals(coefs.getTmMaxTime(),coefDto.getTmMaxTime())
                 && Objects.equals(coefs.getTmMidTime(),coefDto.getTmMidTime())
-                && Objects.equals(coefs.getTmMinTime(),coefDto.getTmMinTime());
+                && Objects.equals(coefs.getTmMinTime(),coefDto.getTmMinTime())
+                && Objects.equals(coefs.getRoundNum(),coefDto.getRoundNum());
 
 
 
@@ -87,6 +89,7 @@ public class CoefsService {
         coefs.setTmMinTime(coefDto.getTmMinTime());
         coefs.setTmMidTime(coefDto.getTmMidTime());
         coefs.setTmMaxTime(coefDto.getTmMaxTime());
+        coefs.setRoundNum(coefDto.getRoundNum());
 
         coefs.setCreateDt(LocalDateTime.now());
         coefs.setGame(game);

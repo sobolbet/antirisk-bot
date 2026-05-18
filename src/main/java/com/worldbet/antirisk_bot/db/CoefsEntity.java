@@ -80,6 +80,8 @@ public class CoefsEntity {
     private BigDecimal tmQuantityRMax;
     @Column(name = "create_dt")
     private LocalDateTime createDt;
+    @Column (name = "round_num")
+    private Integer roundNum;
 
 
     public CoefsEntity() {
@@ -334,6 +336,14 @@ public class CoefsEntity {
         this.createDt = createDt;
     }
 
+    public Integer getRoundNum() {
+        return roundNum;
+    }
+
+    public void setRoundNum(Integer roundNum) {
+        this.roundNum = roundNum;
+    }
+
     @Override
     public String toString() {
         return "CoefsEntity{" +
@@ -367,6 +377,7 @@ public class CoefsEntity {
                 ", tmQuantityRMid=" + tmQuantityRMid +
                 ", tmQuantityRMax=" + tmQuantityRMax +
                 ", createDt=" + createDt +
+                ", roundNum=" + roundNum +
                 '}';
     }
 }

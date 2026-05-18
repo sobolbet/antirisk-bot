@@ -48,7 +48,7 @@ public class EventSearchService {
 
 
 
-            if (localRoundNum.isEmpty() && timeDirect==-1) {
+            if ((localRoundNum.isEmpty() || localRoundNum.equals("1-й раунд")) && timeDirect==-1) {
 
                 String eventId = event.path("I").asText();
 

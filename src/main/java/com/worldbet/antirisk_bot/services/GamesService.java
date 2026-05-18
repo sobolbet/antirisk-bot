@@ -134,10 +134,17 @@ public class GamesService {
         return gamesRepository.findByEventId(eventId);
     }
 
-    public ArrayList<GameEntity> getActiveGames (LocalDate date) {
+    public ArrayList<GameEntity> getActiveGamesWithRoundNumZero (LocalDate dateEnd, LocalDate dateStart) {
         LocalTime timeNow = LocalTime.now().plusMinutes(10);
-        LocalTime timeAgo = timeNow.minusMinutes(40);
-        return gamesRepository.findActiveGameInTimeRange(date,timeNow,timeAgo);
+        LocalTime timeAgo = timeNow.minusMinutes(30);
+        return gamesRepository.findActiveGameInTimeRangeAndRoundNumEqlZero(dateStart,timeNow,timeAgo,dateEnd);
+
+    }
+
+    public ArrayList<GameEntity> getActiveGames(LocalDate dateEnd, LocalDate dateStart) {
+        LocalTime timeNow = LocalTime.now().plusMinutes(10);
+        LocalTime timeAgo = timeNow.minusMinutes(30);
+        return gamesRepository.findActiveGameInTimeRange(dateStart,timeNow,timeAgo,dateEnd);
 
     }
 

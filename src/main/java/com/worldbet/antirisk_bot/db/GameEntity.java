@@ -516,4 +516,45 @@ private Integer roundNumNow;
     public void setRoundNumNow(Integer roundNumNow) {
         this.roundNumNow = roundNumNow;
     }
+
+    @Override
+    public String toString() {
+        return "GameEntity{" +
+                "eventId='" + eventId + '\'' +
+                ", gameNum='" + gameNum + '\'' +
+                ", f1='" + f1 + '\'' +
+                ", f2='" + f2 + '\'' +
+                ", totalF1=" + totalF1 +
+                ", totalF2=" + totalF2 +
+                ", gameWasEnd=" + gameWasEnd +
+                ", r1TypeWinRes='" + r1TypeWinRes + '\'' +
+                ", r2TypeWinRes='" + r2TypeWinRes + '\'' +
+                ", r3TypeWinRes='" + r3TypeWinRes + '\'' +
+                ", r4TypeWinRes='" + r4TypeWinRes + '\'' +
+                ", r5TypeWinRes='" + r5TypeWinRes + '\'' +
+                ", r6TypeWinRes='" + r6TypeWinRes + '\'' +
+                ", r7TypeWinRes='" + r7TypeWinRes + '\'' +
+                ", r8TypeWinRes='" + r8TypeWinRes + '\'' +
+                ", r9TypeWinRes='" + r9TypeWinRes + '\'' +
+                ", r1TimeRes='" + r1TimeRes + '\'' +
+                ", r2TimeRes='" + r2TimeRes + '\'' +
+                ", r3TimeRes='" + r3TimeRes + '\'' +
+                ", r4TimeRes='" + r4TimeRes + '\'' +
+                ", r5TimeRes='" + r5TimeRes + '\'' +
+                ", r6TimeRes='" + r6TimeRes + '\'' +
+                ", r7TimeRes='" + r7TimeRes + '\'' +
+                ", r8TimeRes='" + r8TimeRes + '\'' +
+                ", r9TimeRes='" + r9TimeRes + '\'' +
+                ", r1Time=" + r1Time +
+                ", r2Time=" + r2Time +
+                ", r3Time=" + r3Time +
+                ", r4Time=" + r4Time +
+                ", r5Time=" + r5Time +
+                ", r6Time=" + r6Time +
+                ", r7Time=" + r7Time +
+                ", r8Time=" + r8Time +
+                ", r9Time=" + r9Time +
+                ", roundNumNow=" + roundNumNow +
+                '}';
+    }
 }
