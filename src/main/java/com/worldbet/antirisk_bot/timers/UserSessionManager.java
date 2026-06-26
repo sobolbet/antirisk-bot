@@ -1,10 +1,13 @@
 package com.worldbet.antirisk_bot.timers;
 
 
-import com.worldbet.antirisk_bot.services.StrategyService;
-import com.worldbet.antirisk_bot.services.UserService;
+import com.worldbet.antirisk_bot.db.MessageToSendEvent;
+import com.worldbet.antirisk_bot.db.TypeToUse;
+import com.worldbet.antirisk_bot.db.UserEntity;
+import com.worldbet.antirisk_bot.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
@@ -13,6 +16,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
@@ -93,6 +98,11 @@ public class UserSessionManager {
 
     private final TaskScheduler scheduler;
     private final SenderEvToTGService sender;
+    private final ApplicationEventPublisher applicationEventPublisher;
+    private final TrialSubscribeService trialSubscribeService;
+    private final UserService userService;
+    private final ConvertTimeService convertTimeService;
+    private final LocaleMessageService localeMessageService;
     private final Logger log = LoggerFactory.getLogger(UserSessionManager.class);
 
     // 1. Храним ТРИГГЕРЫ КРОНА (планирование старта)
@@ -105,9 +115,14 @@ public class UserSessionManager {
     private final Map<UUID, ScheduledFuture<?>> autoStopTasks = new ConcurrentHashMap<>();
 
     public UserSessionManager(TaskScheduler scheduler,
-                              SenderEvToTGService sender) {
+                              SenderEvToTGService sender, ApplicationEventPublisher applicationEventPublisher, TrialSubscribeService trialSubscribeService, UserService userService, ConvertTimeService convertTimeService, LocaleMessageService localeMessageService) {
         this.scheduler = scheduler;
         this.sender = sender;
+        this.applicationEventPublisher = applicationEventPublisher;
+        this.trialSubscribeService = trialSubscribeService;
+        this.userService = userService;
+        this.convertTimeService = convertTimeService;
+        this.localeMessageService = localeMessageService;
     }
 
     /**
@@ -139,7 +154,29 @@ public class UserSessionManager {
      */
     private void startSession(UUID userId, Long chatId, long hours) {
         // Гарантированно чистим всё: и старую сессию, и старый таймер автоостановки
-        stopSession(userId);
+        resetCurrentSession(userId);
+
+        UserEntity user;
+        user = userService.findUserById(chatId);
+        Locale userLocale = Locale.forLanguageTag(user.getLocale());
+
+        if (!trialSubscribeService.getUseState(user)) {
+
+            if (user.getTypeToUse()!= null) {
+                Date date =  (user.getTypeToUse().equals(TypeToUse.TRIAL)) ? convertTimeService.convertLocalDateTimeToDate(user.getTrialEndDt()) : convertTimeService.convertLocalDateTimeToDate(user.getSubscribeEndDt());
+
+                Object[] args = new Object[] {date};
+
+                applicationEventPublisher.publishEvent(new MessageToSendEvent(this,chatId,localeMessageService.getMessage("reply.isEndUseType",userLocale,args)));
+
+            } else {
+                applicationEventPublisher.publishEvent(new MessageToSendEvent(this,chatId,localeMessageService.getMessage("reply.isNotUseType ",userLocale)));
+            }
+
+            stopSession(userId);
+            return;
+
+        }
 
         log.info("Starting session for user {}", userId);
 
@@ -159,7 +196,7 @@ public class UserSessionManager {
         // Планируем ОДНОРАЗОВУЮ авто-остановку
         Instant stopTime = Instant.now().plus(hours, ChronoUnit.HOURS);
         ScheduledFuture<?> stopFuture = scheduler.schedule(
-                () -> stopSession(userId),
+                () -> autoStopCurrentSession(userId),
                 stopTime
         );
         // Запоминаем её, чтобы иметь возможность отменить
@@ -196,4 +233,38 @@ public class UserSessionManager {
             log.info("Daily cron schedule permanently removed for user {}", userId);
         }
     }
+
+    private void resetCurrentSession(UUID userId) {
+        ScheduledFuture<?> sessionFuture = activeSessions.remove(userId);
+        if (sessionFuture != null) {
+            sessionFuture.cancel(false);
+        }
+
+        ScheduledFuture<?> stopFuture = autoStopTasks.remove(userId);
+        if (stopFuture != null) {
+            stopFuture.cancel(false);
+        }
+    }
+
+
+    /**
+     * Автоостановка текущей сессии по таймеру.
+     * Завтра Cron снова запустит задачу.
+     */
+    public void autoStopCurrentSession(UUID userId) {
+        log.info("Auto-stopping current session for user {}. Cron stays active.", userId);
+
+        // 1. Удаляем и останавливаем только текущую активную работу
+        ScheduledFuture<?> sessionFuture = activeSessions.remove(userId);
+        if (sessionFuture != null) {
+            sessionFuture.cancel(false); // false, чтобы дать потоку мягко завершиться
+        }
+
+        // 2. Чистим за собой таску автоостановки
+        autoStopTasks.remove(userId);
+    }
+
+
+
+
 }

@@ -67,6 +67,9 @@ public class MessageService {
             userService.save(message.getFrom().getUserName(),userId);
         }
 
+
+        user = userService.findUserById(userId);
+
         Locale userLocale;
 
         if (user.getLocale()!= null) {
@@ -75,12 +78,13 @@ public class MessageService {
 
         } else {
           userLocale = Locale.forLanguageTag(UserLocale.RU.getLocale());
+          userService.saveUserLocale(userId,"ru-RU");
         }
 
 
         BotCommand command = commandLocalizationService.resolveCommand(inputMessage,userLocale);
 
-        if (user.getState().equals(BotState.TIMER_AT_WORK) && !command.equals(STOP_TIMER)) {
+        if (user.getState()!= null && user.getState().equals(BotState.TIMER_AT_WORK) && !command.equals(STOP_TIMER)) {
 
             reply = new SendMessage();
             reply.setChatId(userId);

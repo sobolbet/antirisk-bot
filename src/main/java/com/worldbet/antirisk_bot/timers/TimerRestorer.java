@@ -1,10 +1,8 @@
 package com.worldbet.antirisk_bot.timers;
 
-import com.worldbet.antirisk_bot.db.BotState;
-import com.worldbet.antirisk_bot.db.MessageToSendEvent;
-import com.worldbet.antirisk_bot.db.UserEntity;
-import com.worldbet.antirisk_bot.db.UserRepository;
+import com.worldbet.antirisk_bot.db.*;
 import com.worldbet.antirisk_bot.services.LocaleMessageService;
+import com.worldbet.antirisk_bot.services.UserMessagesService;
 import com.worldbet.antirisk_bot.services.UserService;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -27,12 +25,14 @@ public class TimerRestorer {
     private final UserSessionManager manager;
     private final LocaleMessageService localeMessageService;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final UserMessagesService userMessagesService;
 
-    public TimerRestorer (UserService userService, UserSessionManager manager, LocaleMessageService localeMessageService, ApplicationEventPublisher applicationEventPublisher) {
+    public TimerRestorer (UserService userService, UserSessionManager manager, LocaleMessageService localeMessageService, ApplicationEventPublisher applicationEventPublisher, UserMessagesService userMessagesService) {
         this.userService = userService;
         this.manager = manager;
         this.localeMessageService = localeMessageService;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.userMessagesService = userMessagesService;
     }
 
     //@PostConstruct
@@ -44,12 +44,20 @@ public class TimerRestorer {
 
         List<UserEntity> users = userService.getUsersByStateEqlTimerAtWork(BotState.TIMER_AT_WORK); // дописать из логики
 
+        List<UserEntity> allUsers = userService.getAllUsers();
 
         log.info("Вывожу список юзеров: {}", users);
+
+        log.info("Вывожу список всех юзеров: {}", allUsers);
 
 
         if (users == null || users.isEmpty()) {
             log.info("No active users found to restore.");
+            return;
+        }
+
+        if (allUsers == null || allUsers.isEmpty()) {
+            log.info("No active allUsers found to restore.");
             return;
         }
 
@@ -64,6 +72,14 @@ public class TimerRestorer {
                 applicationEventPublisher.publishEvent(message);
                 } catch (Exception e ) {
                     log.error("Failed to restore timer/message for user ID: {}", u.getId(), e);
+                }
+            }
+
+            for (UserEntity u : allUsers) {
+                try {
+                    userMessagesService.removeAllMessages(u.getId());
+                } catch (Exception e ) {
+                    log.error("Failed to restore delete messages for user ID: {}", u.getId(), e);
                 }
             }
 

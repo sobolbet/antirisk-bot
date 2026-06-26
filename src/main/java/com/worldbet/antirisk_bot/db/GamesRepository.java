@@ -57,3 +57,11 @@ public interface GamesRepository extends JpaRepository<GameEntity, Long> {
                                                     @Param("endDate") LocalDate endDate);
 
 }
+
+
+/* на развитие
+@Query("SELECT g FROM GameEntity g WHERE g.gameWasEnd = false AND g.roundNumNow = 0 " +
+        "AND CAST(CONCAT(g.dateEv, ' ', g.timeEv) AS localdatetime) " +
+        "BETWEEN CAST(CONCAT(:startDate, ' ', :startTime) AS localdatetime) " +
+        "AND CAST(CONCAT(:endDate, ' ', :endTime) AS localdatetime) " +
+        "ORDER BY g.dateEv DESC, g.timeEv DESC")*/

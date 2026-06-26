@@ -14,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
@@ -49,12 +51,12 @@ public class SenderEvToTGService {
 
         //Сначала пробегаемся по сообщениям пользака, если они есть , обновляем сообщения , если игра не закончилась или удаляем , если закончилась
 
-        ArrayList <UserMessagesEntity> messageList =  userMessagesService.getUserMessages(chatId.toString());
+        ArrayList<UserMessagesEntity> messageList = userMessagesService.getUserMessages(chatId.toString());
 
         UserEntity user = userService.findUserById(chatId);
-        log.info("Получен пользователь = " + user.getChatId());
+        log.info("Получен пользователь = {}", user.getChatId());
         StrategyEntity strategy = user.getStrategy();
-        log.info("Получена стратегия = " + strategy.getName());
+        log.info("Получена стратегия = {}", strategy.getName());
 
 
 
@@ -95,9 +97,10 @@ public class SenderEvToTGService {
         }
  */
         // закрывается блок проверочного кода
-        log.info("Перед проверкой листа сообщений на отсутствие событий \n" + messageList.size());
+        log.info("Перед проверкой листа сообщений на отсутствие событий {}", messageList.size());
 
-        try  {
+        try {
+
 
             if (!messageList.isEmpty()) {
                 log.info("Зашёл если у пользака есть сообщения");
@@ -113,7 +116,7 @@ public class SenderEvToTGService {
 
                             log.info("Зашёл для редактирования и отправки сообщения");
 
-                            log.info("EventID(mess) = " + u.getEventId() + "До обновления  время сообщения : " + u.getLastUpdateAt() + "\n Время игры " + game.getUpdatedAt());
+                            log.info("EventID(mess) = {} До обновления  время сообщения : {} \n Время игры {}", u.getEventId(), u.getLastUpdateAt(), game.getUpdatedAt());
 
 
                             u.setRoundNumNow(game.getRoundNumNow());
@@ -155,10 +158,21 @@ public class SenderEvToTGService {
                     }
                 }
             }
-        } catch (Exception ex){
-            log.error("Ошибка runtime при отправке в ТГ" , ex);
+        } catch (Exception ex) {
+            log.error("Ошибка runtime при отправке в ТГ", ex);
         }
 
+
+        LocalTime timeEndTimer = user.getMoscowTime().plusHours(user.getTimeJob());
+        LocalTime timeNow = LocalTime.now();
+
+        long diff = ChronoUnit.MINUTES.between(timeNow,timeEndTimer);
+
+        if (diff<0) {
+            diff += 24 * 60;
+        }
+
+        if (diff>18) {
 
         //Ищем игры соответствующие стратегии , если они есть , парсим и добавляем в таблицу сообщений пользака
 
@@ -167,12 +181,12 @@ public class SenderEvToTGService {
         StrategyEntity strategy = user.getStrategy();
         log.info("Получена стратегия = " + strategy.getName());*/
         ArrayList<Pair> pairs = strategy.getStrategyParams().getPairs();
-        log.info("Размер списка пар = " + pairs.size());
+        log.info("Размер списка пар = {}", pairs.size());
         LocalDateTime now = LocalDateTime.now();
-        ArrayList<GameEntity> games = gamesService.getActiveGamesWithRoundNumZero(now.plusMinutes(10).toLocalDate(),now.minusMinutes(30).toLocalDate());
-        ArrayList<GameEntity> allActiveGames = gamesService.getActiveGames(now.plusMinutes(10).toLocalDate(),now.minusMinutes(30).toLocalDate());
-        log.info("Размер списка всех активных игр = " + allActiveGames.size());
-        log.info("Размер списка активных игр до начала = " + games.size());
+        ArrayList<GameEntity> games = gamesService.getActiveGamesWithRoundNumZero(now.plusMinutes(10).toLocalDate(), now.minusMinutes(30).toLocalDate());
+        ArrayList<GameEntity> allActiveGames = gamesService.getActiveGames(now.plusMinutes(10).toLocalDate(), now.minusMinutes(30).toLocalDate());
+        log.info("Размер списка всех активных игр = {}", allActiveGames.size());
+        log.info("Размер списка активных игр до начала = {}", games.size());
 
 
         for (GameEntity game : games) {
@@ -180,10 +194,10 @@ public class SenderEvToTGService {
             Integer eventFocus = 0;
 
             if (pairs.stream().anyMatch(p ->
-                  game.getF1().equals(p.getF1()) && game.getF2().equals(p.getF2())
-            )){
+                    game.getF1().equals(p.getF1()) && game.getF2().equals(p.getF2())
+            )) {
 
-                log.info("Зашёл если пара совпала GameEventId = " + game.getEventId());
+                log.info("Зашёл если пара совпала GameEventId = {}", game.getEventId());
 
                 if (messageList.stream().noneMatch(u -> u.getEventId().equals(game.getEventId()))) {
 
@@ -193,19 +207,19 @@ public class SenderEvToTGService {
                     String messageText = "пустое сообщение";
 
                     switch (strategy.getName()) {
-                        case "FAT_FLET_5_ROUNDS" :
-                            messageText = calculationService.fletCalculation(game,chatId);
+                        case "FAT_FLET_5_ROUNDS":
+                            messageText = calculationService.fletCalculation(game, chatId);
                             break;
-                        case "FAT_DOGON_3_ROUNDS" :
-                            messageText = calculationService.dogonCalculation(game,chatId);
+                        case "FAT_DOGON_3_ROUNDS":
+                            messageText = calculationService.dogonCalculation(game, chatId);
                             break;
-                        case "FAT_FB_3_ROUNDS" :
+                        case "FAT_FB_3_ROUNDS":
 
                             //todo дописать логику присвоения фокуса
 
-                            if (messageList.stream().noneMatch(u -> u.getEventFocus()==1)){
+                            if (messageList.stream().noneMatch(u -> u.getEventFocus() == 1)) {
                                 eventFocus = 1;
-                                messageText = calculationService.fbCalculation(game,chatId);
+                                messageText = calculationService.fbCalculation(game, chatId);
                             } else {
                                 continue;
                             }
@@ -218,8 +232,8 @@ public class SenderEvToTGService {
                             + "\nНомер раунда сейчас = null"*/ messageText);
                     applicationEventPublisher.publishEvent(message);
                     if (message.getMessageIdForEdit() != null) {
-                        log.info("message id = " + message.getMessageIdForEdit());
-                        UserMessagesEntity userMessagesEntity = new UserMessagesEntity(user, chatId.toString(), message.getMessageIdForEdit(), game.getEventId(), game.getRoundNumNow(), game.getUpdatedAt(),eventFocus);
+                        log.info("message id = {}", message.getMessageIdForEdit());
+                        UserMessagesEntity userMessagesEntity = new UserMessagesEntity(user, chatId.toString(), message.getMessageIdForEdit(), game.getEventId(), game.getRoundNumNow(), game.getUpdatedAt(), eventFocus);
                         userMessagesService.updateUserMessageEntity(userMessagesEntity);
                     } else {
                         throw new RuntimeException("Не удалось получить message id");
@@ -229,6 +243,8 @@ public class SenderEvToTGService {
 
             }
         }
+
+    }
 
 
 

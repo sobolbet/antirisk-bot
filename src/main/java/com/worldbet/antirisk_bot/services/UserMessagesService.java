@@ -37,4 +37,9 @@ public class UserMessagesService {
     public void deleteEntity (UserMessagesEntity entity) {
         userMessagesRepository.delete(entity);
     }
+
+    public void removeAllMessages (UUID userId) {
+
+        userMessagesRepository.deleteAllByUserId(userId);
+    }
 }

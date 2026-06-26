@@ -7,16 +7,16 @@ import com.worldbet.antirisk_bot.db.CoefsEntity;
 import com.worldbet.antirisk_bot.db.GameEntity;
 import com.worldbet.antirisk_bot.db.UserEntity;
 import com.worldbet.antirisk_bot.db.UserMessagesEntity;
-import com.worldbet.antirisk_bot.services.CoefsService;
-import com.worldbet.antirisk_bot.services.UserMessagesService;
-import com.worldbet.antirisk_bot.services.UserService;
+import com.worldbet.antirisk_bot.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.UUID;
 
 @Service
@@ -26,16 +26,20 @@ public class CalculationService {
     private final UserService userService;
     private final UserMessagesService userMessagesService;
     private  final UserFBBetService userFBBetService;
+    private final LocaleMessageService localeMessageService;
     private final Logger log = LoggerFactory.getLogger(CalculationService.class);
+    private final ConvertTimeService convertTimeService;
 
 
 
 
-    public CalculationService(CoefsService coefsService, UserService userService, UserMessagesService userMessagesService, UserFBBetService userFBBetService) {
+    public CalculationService(CoefsService coefsService, UserService userService, UserMessagesService userMessagesService, UserFBBetService userFBBetService, LocaleMessageService localeMessageService, ConvertTimeService convertTimeService) {
         this.coefsService = coefsService;
         this.userService = userService;
         this.userMessagesService = userMessagesService;
         this.userFBBetService = userFBBetService;
+        this.localeMessageService = localeMessageService;
+        this.convertTimeService = convertTimeService;
     }
 
 
@@ -46,6 +50,7 @@ public class CalculationService {
         UserEntity user = userService.findUserById(chatId);
         Double bankStart = user.getBankStart();
         Double bankNow = user.getBankNow();
+        Locale userLocale = Locale.forLanguageTag(user.getLocale());
 
 
 
@@ -94,7 +99,10 @@ public class CalculationService {
 
         userService.updateCurrentUserBank(chatId,bankNow);
 
-        Flet5RoundMessageModel model = new Flet5RoundMessageModel(bankStart,bankNow,game,coefs);
+        ZoneId sourceZoneId = ZoneId.of("Europe/Moscow");
+        ZoneId targetZoneId = ZoneId.of (user.getTimeZone());
+
+        Flet5RoundMessageModel model = new Flet5RoundMessageModel(bankStart,bankNow,game,coefs,localeMessageService,userLocale,sourceZoneId,targetZoneId,convertTimeService);
 
         return model.toString();
     }
@@ -107,30 +115,31 @@ public class CalculationService {
         UserEntity user = userService.findUserById(chatId);
         Double bankStart = user.getBankStart();
         Double bankNow = user.getBankNow();
+        Locale userLocale = Locale.forLanguageTag(user.getLocale());
 
 
 
         if (game.getRoundNumNow() == 1) {
-            if (game.getR1TypeWinRes().equals("F")) {
+            if (game.getR1TypeWinRes()!= null && game.getR1TypeWinRes().equals("F")) {
                 bankNow = bankNow + (bankStart * 0.01 * coefs.getFat().doubleValue()) - (bankStart * 0.01);
             }
-            if (game.getR1TypeWinRes().equals("B") || game.getR1TypeWinRes().equals("R")) {
+            if (game.getR1TypeWinRes()!= null && (game.getR1TypeWinRes().equals("B") || game.getR1TypeWinRes().equals("R"))) {
                 bankNow = bankNow - (bankStart * 0.01);
             }
         }
         if (game.getRoundNumNow() == 2 && (game.getR1TypeWinRes().equals("R") || game.getR1TypeWinRes().equals("B"))) {
-            if (game.getR2TypeWinRes().equals("F")) {
+            if (game.getR2TypeWinRes()!= null && game.getR2TypeWinRes().equals("F")) {
                 bankNow = bankNow + (bankStart * 0.02 * coefs.getFat().doubleValue()) - (bankStart * 0.02);
             }
-            if (game.getR2TypeWinRes().equals("B") || game.getR2TypeWinRes().equals("R")) {
+            if (game.getR2TypeWinRes()!= null && (game.getR2TypeWinRes().equals("B") || game.getR2TypeWinRes().equals("R"))) {
                 bankNow = bankNow - (bankStart * 0.02);
             }
         }
         if (game.getRoundNumNow() == 3 && (game.getR1TypeWinRes().equals("R") || game.getR1TypeWinRes().equals("B")) && (game.getR2TypeWinRes().equals("R") || game.getR2TypeWinRes().equals("B"))) {
-            if (game.getR3TypeWinRes().equals("F")) {
+            if (game.getR3TypeWinRes()!= null && game.getR3TypeWinRes().equals("F")) {
                 bankNow = bankNow + (bankStart * 0.04 * coefs.getFat().doubleValue()) - (bankStart * 0.04);
             }
-            if (game.getR3TypeWinRes().equals("B") || game.getR3TypeWinRes().equals("R")) {
+            if (game.getR3TypeWinRes()!= null && (game.getR3TypeWinRes().equals("B") || game.getR3TypeWinRes().equals("R"))) {
                 bankNow = bankNow - (bankStart * 0.04);
             }
         }
@@ -138,7 +147,10 @@ public class CalculationService {
 
         userService.updateCurrentUserBank(chatId,bankNow);
 
-        Dogon3RoundMessageModel model = new Dogon3RoundMessageModel(bankStart,bankNow,game,coefs);
+        ZoneId sourceZoneId = ZoneId.of("Europe/Moscow");
+        ZoneId targetZoneId = ZoneId.of (user.getTimeZone());
+
+        Dogon3RoundMessageModel model = new Dogon3RoundMessageModel(bankStart,bankNow,game,coefs,localeMessageService,userLocale, convertTimeService,sourceZoneId ,targetZoneId );
 
         return model.toString();
     }
@@ -152,6 +164,8 @@ public class CalculationService {
         UserMessagesEntity userMessagesEntity = userMessagesService.getUserMessages(chatId.toString()).stream().
                 filter(u -> u.getEventId().equals(game.getEventId())).findFirst().orElse(null);
 
+
+        Locale userLocale = Locale.forLanguageTag(user.getLocale());
 
         Double bankStart = user.getBankStart();
         Double bankNow = user.getBankNow();
@@ -357,7 +371,10 @@ public class CalculationService {
 
         listLoseBets = userFBBetService.getUsersFBBets(chatId.toString());
 
-        FB3RoundMessageModel model = new FB3RoundMessageModel(bankStart,bankNow,game,coefs,listLoseBets);
+        ZoneId sourceZoneId = ZoneId.of("Europe/Moscow");
+        ZoneId targetZoneId = ZoneId.of (user.getTimeZone());
+
+        FB3RoundMessageModel model = new FB3RoundMessageModel(bankStart,bankNow,game,coefs,listLoseBets,localeMessageService,userLocale,convertTimeService,sourceZoneId ,targetZoneId);
 
         return  model.toString();
 

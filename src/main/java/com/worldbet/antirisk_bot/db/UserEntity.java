@@ -78,6 +78,10 @@ public class UserEntity {
     @JoinColumn(name = "strategy_id")
     private StrategyEntity strategy;
 
+    @Enumerated(EnumType.STRING)
+    @Column (name = "type_to_use")
+    private TypeToUse typeToUse;
+
    /* @OneToMany (mappedBy = "userEntity")
     private List<PaymentEntity> paymentsList;*/
 
@@ -101,6 +105,14 @@ public class UserEntity {
         this.paymentsList = paymentsList;
     }*/
 
+
+    public TypeToUse getTypeToUse() {
+        return typeToUse;
+    }
+
+    public void setTypeToUse(TypeToUse typeToUse) {
+        this.typeToUse = typeToUse;
+    }
 
     public Double getBankStart() {
         return bankStart;

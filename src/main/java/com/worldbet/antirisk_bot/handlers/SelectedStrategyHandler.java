@@ -4,6 +4,7 @@ import com.worldbet.antirisk_bot.db.BotState;
 import com.worldbet.antirisk_bot.db.MessageToSendEvent;
 import com.worldbet.antirisk_bot.db.StrategyEntity;
 import com.worldbet.antirisk_bot.db.UserEntity;
+import com.worldbet.antirisk_bot.services.KeyboardsService;
 import com.worldbet.antirisk_bot.services.LocaleMessageService;
 import com.worldbet.antirisk_bot.services.StrategyService;
 import com.worldbet.antirisk_bot.services.UserService;
@@ -27,13 +28,15 @@ public class SelectedStrategyHandler implements InputMessageHandler{
     private final LocaleMessageService localeMessageService;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final GetMainMenuHandler getMainMenuHandler;
+    private final KeyboardsService keyboardsService;
 
-    public SelectedStrategyHandler(UserService userService, StrategyService strategyService, LocaleMessageService localeMessageService, ApplicationEventPublisher applicationEventPublisher, GetMainMenuHandler getMainMenuHandler) {
+    public SelectedStrategyHandler(UserService userService, StrategyService strategyService, LocaleMessageService localeMessageService, ApplicationEventPublisher applicationEventPublisher, GetMainMenuHandler getMainMenuHandler, KeyboardsService keyboardsService) {
         this.userService = userService;
         this.strategyService = strategyService;
         this.localeMessageService = localeMessageService;
         this.applicationEventPublisher = applicationEventPublisher;
         this.getMainMenuHandler = getMainMenuHandler;
+        this.keyboardsService = keyboardsService;
     }
 
 
@@ -57,11 +60,23 @@ public class SelectedStrategyHandler implements InputMessageHandler{
         if (strategy.isEmpty()) {
           replyToUser.setText(localeMessageService.getMessage("reply.wrongChoice",userLocale));
         } else {
-            userService.saveUserStrategy(userId,strategy.get());
-            BotState botState = BotState.GET_MAIN_MENU;
-            userService.saveBotState(userId,botState);
-            applicationEventPublisher.publishEvent(new MessageToSendEvent(this,userId,localeMessageService.getMessage("reply.strategySelected",userLocale)));
-            replyToUser = getMainMenuHandler.handle(message);
+
+
+            if (strategy.get().getName().equals("FAT_FB_3_ROUNDS")) {
+                userService.saveUserStrategy(userId, strategy.get());
+                BotState botState = BotState.DELETE_HISTORY_BETS;
+                userService.saveBotState(userId, botState);
+                replyToUser.setText(localeMessageService.getMessage("reply.questionDeleteStrategy",userLocale));
+                replyToUser.setReplyMarkup(keyboardsService.getRespYesOrNoDeleteBetsHistory(userLocale));
+
+            }else {
+
+                userService.saveUserStrategy(userId, strategy.get());
+                BotState botState = BotState.GET_MAIN_MENU;
+                userService.saveBotState(userId, botState);
+                applicationEventPublisher.publishEvent(new MessageToSendEvent(this, userId, localeMessageService.getMessage("reply.strategySelected", userLocale)));
+                replyToUser = getMainMenuHandler.handle(message);
+            }
         }
 
 

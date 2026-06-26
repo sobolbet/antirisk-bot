@@ -23,6 +23,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query (value = "select u from UserEntity u where u.state = :botState")
     ArrayList<UserEntity> getUserByBotStateEqlTimerAtWork (BotState botState);
 
+
+
    /*@Transactional
     @Modifying
     @Query("UPDATE UserEntity u SET u.locale = :locale WHERE u.chatId = :chatId")

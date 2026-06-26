@@ -23,6 +23,19 @@ public class ConvertTimeService {
         return sourceLocalTime.plus(offsetDifference);
     }
 
+
+
+    public LocalDateTime convertDateTimeFromSourceToTarget(LocalDateTime sourceLocalDateTime, ZoneId sourceZoneId , ZoneId targetZoneId) {
+
+        ZonedDateTime sourceZoned = sourceLocalDateTime.atZone(sourceZoneId);
+
+        ZonedDateTime targetZoned = sourceZoned.withZoneSameInstant(targetZoneId);
+
+        return targetZoned.toLocalDateTime();
+    }
+
+
+
     public Date convertLocalDateTimeToDate(LocalDateTime localDateTime) {
 
         ZoneId zoneId = ZoneId.of("Europe/Moscow");

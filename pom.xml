@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.worldbet</groupId>
 	<artifactId>antirisk-bot</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<name>antirisk-bot</name>
 	<description>AntiRiskBot for Telegram</description>
 	<url/>

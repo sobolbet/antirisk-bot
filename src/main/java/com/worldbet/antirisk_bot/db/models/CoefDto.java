@@ -80,7 +80,7 @@ public class CoefDto {
     }
 
     public void setP1m(BigDecimal p1m) {
-        this.p1m = p1m.setScale(3, RoundingMode.HALF_UP);
+        this.p1m = p1m;
     }
 
     public BigDecimal getP2m() {
@@ -88,7 +88,7 @@ public class CoefDto {
     }
 
     public void setP2m(BigDecimal p2m) {
-        this.p2m = p2m.setScale(3, RoundingMode.HALF_UP);
+        this.p2m = p2m;
     }
 
     public BigDecimal getP1r() {
@@ -96,7 +96,7 @@ public class CoefDto {
     }
 
     public void setP1r(BigDecimal p1r) {
-        this.p1r = p1r.setScale(3, RoundingMode.HALF_UP);
+        this.p1r = p1r;
     }
 
     public BigDecimal getP2r() {
@@ -104,7 +104,7 @@ public class CoefDto {
     }
 
     public void setP2r(BigDecimal p2r) {
-        this.p2r = p2r.setScale(3, RoundingMode.HALF_UP);
+        this.p2r = p2r;
     }
 
     public BigDecimal getFat() {
@@ -112,7 +112,7 @@ public class CoefDto {
     }
 
     public void setFat(BigDecimal fat) {
-        this.fat = fat.setScale(3, RoundingMode.HALF_UP);
+        this.fat = fat;
     }
 
     public BigDecimal getBrut() {
@@ -120,7 +120,7 @@ public class CoefDto {
     }
 
     public void setBrut(BigDecimal brut) {
-        this.brut = brut.setScale(3, RoundingMode.HALF_UP);
+        this.brut = brut;
     }
 
     public BigDecimal getRut() {
@@ -128,7 +128,7 @@ public class CoefDto {
     }
 
     public void setRut(BigDecimal rut) {
-        this.rut = rut.setScale(3, RoundingMode.HALF_UP);
+        this.rut = rut;
     }
 
     public BigDecimal getMinTT() {
@@ -144,7 +144,7 @@ public class CoefDto {
     }
 
     public void setTbMinTime(BigDecimal tbMinTime) {
-        this.tbMinTime = tbMinTime.setScale(3, RoundingMode.HALF_UP);
+        this.tbMinTime = tbMinTime;
     }
 
     public BigDecimal getTmMinTime() {
@@ -152,7 +152,7 @@ public class CoefDto {
     }
 
     public void setTmMinTime(BigDecimal tmMinTime) {
-        this.tmMinTime = tmMinTime.setScale(3, RoundingMode.HALF_UP);
+        this.tmMinTime = tmMinTime;
     }
 
     public BigDecimal getMidTT() {
@@ -168,7 +168,7 @@ public class CoefDto {
     }
 
     public void setTbMidTime(BigDecimal tbMidTime) {
-        this.tbMidTime = tbMidTime.setScale(3, RoundingMode.HALF_UP);
+        this.tbMidTime = tbMidTime;
     }
 
     public BigDecimal getTmMidTime() {
@@ -176,7 +176,7 @@ public class CoefDto {
     }
 
     public void setTmMidTime(BigDecimal tmMidTime) {
-        this.tmMidTime = tmMidTime.setScale(3, RoundingMode.HALF_UP);
+        this.tmMidTime = tmMidTime;
     }
 
     public BigDecimal getMaxTT() {
@@ -192,7 +192,7 @@ public class CoefDto {
     }
 
     public void setTbMaxTime(BigDecimal tbMaxTime) {
-        this.tbMaxTime = tbMaxTime.setScale(3, RoundingMode.HALF_UP);
+        this.tbMaxTime = tbMaxTime;
     }
 
     public BigDecimal getTmMaxTime() {
@@ -200,7 +200,7 @@ public class CoefDto {
     }
 
     public void setTmMaxTime(BigDecimal tmMaxTime) {
-        this.tmMaxTime = tmMaxTime.setScale(3, RoundingMode.HALF_UP);
+        this.tmMaxTime = tmMaxTime;
     }
 
     public BigDecimal getFatYes() {
@@ -208,7 +208,7 @@ public class CoefDto {
     }
 
     public void setFatYes(BigDecimal fatYes) {
-        this.fatYes = fatYes.setScale(3, RoundingMode.HALF_UP);
+        this.fatYes = fatYes;
     }
 
     public BigDecimal getFatNo() {
@@ -216,7 +216,7 @@ public class CoefDto {
     }
 
     public void setFatNo(BigDecimal fatNo) {
-        this.fatNo = fatNo.setScale(3, RoundingMode.HALF_UP);
+        this.fatNo = fatNo;
     }
 
     public BigDecimal getFw() {
@@ -224,7 +224,7 @@ public class CoefDto {
     }
 
     public void setFw(BigDecimal fw) {
-        this.fw = fw.setScale(3, RoundingMode.HALF_UP);
+        this.fw = fw;
     }
 
     public Integer getRoundNum() {
@@ -240,7 +240,7 @@ public class CoefDto {
     }
 
     public void setQuantityRMinVal(BigDecimal quantityRMinVal) {
-        this.quantityRMinVal = quantityRMinVal.setScale(3, RoundingMode.HALF_UP);
+        this.quantityRMinVal = quantityRMinVal;
     }
 
     public BigDecimal getQuantityRMidVal() {
@@ -248,7 +248,7 @@ public class CoefDto {
     }
 
     public void setQuantityRMidVal(BigDecimal quantityRMidVal) {
-        this.quantityRMidVal = quantityRMidVal.setScale(3, RoundingMode.HALF_UP);
+        this.quantityRMidVal = quantityRMidVal;
     }
 
     public BigDecimal getQuantityRMaxVal() {
@@ -256,7 +256,7 @@ public class CoefDto {
     }
 
     public void setQuantityRMaxVal(BigDecimal quantityRMaxVal) {
-        this.quantityRMaxVal = quantityRMaxVal.setScale(3, RoundingMode.HALF_UP);
+        this.quantityRMaxVal = quantityRMaxVal;
     }
 
     public BigDecimal getTbQuantityRMin() {
@@ -264,7 +264,7 @@ public class CoefDto {
     }
 
     public void setTbQuantityRMin(BigDecimal tbQuantityRMin) {
-        this.tbQuantityRMin = tbQuantityRMin.setScale(3, RoundingMode.HALF_UP);
+        this.tbQuantityRMin = tbQuantityRMin;
     }
 
     public BigDecimal getTbQuantityRMid() {
@@ -272,7 +272,7 @@ public class CoefDto {
     }
 
     public void setTbQuantityRMid(BigDecimal tbQuantityRMid) {
-        this.tbQuantityRMid = tbQuantityRMid.setScale(3, RoundingMode.HALF_UP);
+        this.tbQuantityRMid = tbQuantityRMid;
     }
 
     public BigDecimal getTbQuantityRMax() {
@@ -280,7 +280,7 @@ public class CoefDto {
     }
 
     public void setTbQuantityRMax(BigDecimal tbQuantityRMax) {
-        this.tbQuantityRMax = tbQuantityRMax.setScale(3, RoundingMode.HALF_UP);
+        this.tbQuantityRMax = tbQuantityRMax;
     }
 
     public BigDecimal getTmQuantityRMin() {
@@ -288,7 +288,7 @@ public class CoefDto {
     }
 
     public void setTmQuantityRMin(BigDecimal tmQuantityRMin) {
-        this.tmQuantityRMin = tmQuantityRMin.setScale(3, RoundingMode.HALF_UP);
+        this.tmQuantityRMin = tmQuantityRMin;
     }
 
     public BigDecimal getTmQuantityRMid() {
@@ -296,7 +296,7 @@ public class CoefDto {
     }
 
     public void setTmQuantityRMid(BigDecimal tmQuantityRMid) {
-        this.tmQuantityRMid = tmQuantityRMid.setScale(3, RoundingMode.HALF_UP);
+        this.tmQuantityRMid = tmQuantityRMid;
     }
 
     public BigDecimal getTmQuantityRMax() {
@@ -304,7 +304,7 @@ public class CoefDto {
     }
 
     public void setTmQuantityRMax(BigDecimal tmQuantityRMax) {
-        this.tmQuantityRMax = tmQuantityRMax.setScale(3, RoundingMode.HALF_UP);
+        this.tmQuantityRMax = tmQuantityRMax;
     }
 }
 

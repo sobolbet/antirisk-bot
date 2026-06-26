@@ -3,6 +3,7 @@ package com.worldbet.antirisk_bot.handlers;
 import com.worldbet.antirisk_bot.controllers.AntiRiskBotCore;
 import com.worldbet.antirisk_bot.db.BotState;
 import com.worldbet.antirisk_bot.db.MessageToSendEvent;
+import com.worldbet.antirisk_bot.db.TypeToUse;
 import com.worldbet.antirisk_bot.db.UserEntity;
 import com.worldbet.antirisk_bot.services.*;
 import org.slf4j.Logger;
@@ -30,15 +31,17 @@ public class GetTrialHandler implements InputMessageHandler{
     private final KeyboardsService keyboardsService;
     private  final ApplicationEventPublisher applicationEventPublisher;
     private final ConvertTimeService convertTimeService;
+    private final TrialSubscribeService trialSubscribeService;
 
     public GetTrialHandler (GetMainMenuHandler getMainMenuHandler, LocaleMessageService localeMessageService, UserService userService,
-                            KeyboardsService keyboardsService, ApplicationEventPublisher applicationEventPublisher, ConvertTimeService convertTimeService){
+                            KeyboardsService keyboardsService, ApplicationEventPublisher applicationEventPublisher, ConvertTimeService convertTimeService, TrialSubscribeService trialSubscribeService){
         this.getMainMenuHandler = getMainMenuHandler;
         this.localeMessageService = localeMessageService;
         this.userService = userService;
         this.keyboardsService = keyboardsService;
         this.applicationEventPublisher = applicationEventPublisher;
         this.convertTimeService = convertTimeService;
+        this.trialSubscribeService = trialSubscribeService;
     }
 
 
@@ -55,18 +58,18 @@ public class GetTrialHandler implements InputMessageHandler{
 
         Long userId = message.getChatId();
         UserEntity user = userService.findUserById(userId);
-        SendMessage replyToUser = new SendMessage();
+        SendMessage replyToUser;
         Locale userLocale = Locale.forLanguageTag(user.getLocale());
 
-        if (user.getTrial()==null) {
-            userService.saveUserTrial(userId,true);
-            userService.saveUserDateTrial(userId, LocalDateTime.now());
+        if (user.getTypeToUse()==null && user.getTrialStartDt() == null && user.getTrialEndDt() == null) {
+            trialSubscribeService.activateTrial(user,LocalDateTime.now());
             user = userService.findUserById(userId);
             Date date = convertTimeService.convertLocalDateTimeToDate(user.getTrialStartDt());
             Object[] args = new Object[] {date};
             applicationEventPublisher.publishEvent(new MessageToSendEvent(this,
                     userId,localeMessageService.getMessage("reply.setTrial",userLocale,args)));
-        } else if (user.getTrial()== true) {
+        } else if (user.getTypeToUse().equals(TypeToUse.TRIAL) && (LocalDateTime.now().isAfter(user.getTrialStartDt())
+                && LocalDateTime.now().isBefore(user.getTrialEndDt()))) {
             user = userService.findUserById(userId);
             Date date = convertTimeService.convertLocalDateTimeToDate(user.getTrialStartDt());
             Object[] args = new Object[] {date};
@@ -74,7 +77,7 @@ public class GetTrialHandler implements InputMessageHandler{
                     localeMessageService.getMessage("reply.isTrial",userLocale,args)) );
             log.info("Зашёл , если  true");
             //antiRiskBotCore.sendMessage(userId, localeMessageService.getMessage("reply.isTrial",userLocale));
-        } else if (user.getTrial() == false) {
+        } else if (LocalDateTime.now().isAfter(user.getTrialEndDt())) {
             user = userService.findUserById(userId);
             Date date = convertTimeService.convertLocalDateTimeToDate(user.getTrialEndDt());
             Object[] args = new Object[] {date};

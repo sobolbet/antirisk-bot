@@ -136,7 +136,7 @@ public class GamesService {
 
     public ArrayList<GameEntity> getActiveGamesWithRoundNumZero (LocalDate dateEnd, LocalDate dateStart) {
         LocalTime timeNow = LocalTime.now().plusMinutes(10);
-        LocalTime timeAgo = timeNow.minusMinutes(30);
+        LocalTime timeAgo = LocalTime.now().minusMinutes(30);
         return gamesRepository.findActiveGameInTimeRangeAndRoundNumEqlZero(dateStart,timeNow,timeAgo,dateEnd);
 
     }

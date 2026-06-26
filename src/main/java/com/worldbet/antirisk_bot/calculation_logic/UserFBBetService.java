@@ -37,4 +37,10 @@ public class UserFBBetService {
         userFBBetRepository.delete(entity);
     }
 
+    public void deleteByChatId (String chatId) {
+        userFBBetRepository.deleteByChatId(chatId);
+    }
+
+
+
 }

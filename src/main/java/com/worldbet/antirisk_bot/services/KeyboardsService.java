@@ -120,6 +120,41 @@ public class KeyboardsService {
     }
 
 
+    public ReplyKeyboardMarkup getRespYesOrNoDeleteBetsHistory (Locale userLocale) {
+
+
+        final ReplyKeyboardMarkup replyKeyboard = new ReplyKeyboardMarkup();
+        replyKeyboard.setSelective(false);
+        replyKeyboard.setResizeKeyboard(true);
+        replyKeyboard.setOneTimeKeyboard(true);
+
+        List<KeyboardRow> keyBoard = new ArrayList<>();
+
+        KeyboardRow row1 = new KeyboardRow();
+        KeyboardRow row2 = new KeyboardRow();
+
+        //KeyboardRow row5 = new KeyboardRow();
+        //KeyboardRow row6 = new KeyboardRow();
+        row1.add(new KeyboardButton(localeMessageService.getMessage("menu.delete_bets_story",userLocale)));
+        row2.add(new KeyboardButton(localeMessageService.getMessage("menu.not_delete_bets_story",userLocale)));
+        //row4.add(new KeyboardButton(""));
+        keyBoard.add(row1);
+        keyBoard.add(row2);
+        //keyBoard.add(row5);
+        //keyBoard.add(row6);
+        replyKeyboard.setKeyboard(keyBoard);
+        /*List<InlineKeyboardButton> rowInLine2 = new ArrayList<>();
+        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
+        inlineKeyboardButton2.setText("Принять участие в розыгрыше");
+        inlineKeyboardButton2.setCallbackData("XMASDRAW");
+        rowInLine2.add(inlineKeyboardButton2);*/
+        //rowsInLine.add(rowInLine2);
+
+
+        return replyKeyboard;
+    }
+
+
 
     public ReplyKeyboardMarkup getLocaleKeyboard () {
 
