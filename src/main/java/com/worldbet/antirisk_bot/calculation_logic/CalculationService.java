@@ -200,9 +200,12 @@ public class CalculationService {
                         bankNow = bankNow + (listLoseBets.get(listLoseBets.size()-1).getBetAmount() * coefs.getFat().doubleValue()) - listLoseBets.get(listLoseBets.size()-1).getBetAmount();
 
                         userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                        listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                         if (listLoseBets.size()>1){
                             userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                            listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                             userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                            listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                             if (listLoseBets.size()>1) {
                                 userFBBetService.save(user,((listLoseBets.get(listLoseBets.size()-2).getBetAmount() + listLoseBets.get(listLoseBets.size()-1).getBetAmount())/(coefs.getFat().doubleValue()-1)));
                             }
@@ -215,6 +218,7 @@ public class CalculationService {
                         }
                         else if (listLoseBets.size()==1){
                             userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                            listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                             userFBBetService.save(user,(desProfit /(coefs.getFat().doubleValue()-1)));}
 
 
@@ -229,9 +233,12 @@ public class CalculationService {
                         bankNow = bankNow + (listLoseBets.get(listLoseBets.size()-1).getBetAmount() * coefs.getFat().doubleValue()) - listLoseBets.get(listLoseBets.size()-1).getBetAmount();
 
                         userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                        listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                         if (listLoseBets.size()>1){
                             userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                            listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                             userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                            listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                             if (listLoseBets.size()>1) {
                                 userFBBetService.save(user,(listLoseBets.get(listLoseBets.size()-2).getBetAmount() + listLoseBets.get(listLoseBets.size()-1).getBetAmount())/(coefs.getFat().doubleValue()-1));
                             }
@@ -244,6 +251,7 @@ public class CalculationService {
                         }
                         else if (listLoseBets.size()==1){
                             userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                            listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                             userFBBetService.save(user,(desProfit /(coefs.getFat().doubleValue()-1)));}
 
 
@@ -258,13 +266,17 @@ public class CalculationService {
                         bankNow = bankNow + (listLoseBets.get(listLoseBets.size()-1).getBetAmount() * coefs.getFat().doubleValue()) - listLoseBets.get(listLoseBets.size()-1).getBetAmount();
 
                         userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                        listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                         if (listLoseBets.size()>1){
                             userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                            listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                             userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                            listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                         }
 
                         else if (listLoseBets.size()==1){
                             userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                            listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                         }
 
                     }
@@ -294,6 +306,7 @@ public class CalculationService {
                         bankNow = bankNow + (listLoseBets.get(listLoseBets.size()-1).getBetAmount() * coefs.getFat().doubleValue()) - listLoseBets.get(listLoseBets.size()-1).getBetAmount();
 
                         userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                        listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                         if (listLoseBets.size()==0){userFBBetService.save(user,desProfit/(coefs.getFat().doubleValue()-1));}
 
 
@@ -308,6 +321,7 @@ public class CalculationService {
                         bankNow = bankNow + (listLoseBets.get(listLoseBets.size()-1).getBetAmount() * coefs.getFat().doubleValue()) - listLoseBets.get(listLoseBets.size()-1).getBetAmount();
 
                         userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                        listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
                         if (listLoseBets.size()==0){userFBBetService.save(user,desProfit/(coefs.getFat().doubleValue()-1));}
 
 
@@ -322,6 +336,7 @@ public class CalculationService {
                         bankNow = bankNow + (listLoseBets.get(listLoseBets.size()-1).getBetAmount() * coefs.getFat().doubleValue()) - listLoseBets.get(listLoseBets.size()-1).getBetAmount();
 
                         userFBBetService.deleteEntity(listLoseBets.get(listLoseBets.size()-1));
+                        listLoseBets.remove(listLoseBets.get(listLoseBets.size()-1));
 
                     }
                     if (game.getR3TypeWinRes().equals("B") || game.getR3TypeWinRes().equals("R")) {

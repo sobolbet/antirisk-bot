@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -153,12 +154,18 @@ public class UserSessionManager {
      * Старт сессии (ОДНА задача на пользователя)
      */
     private void startSession(UUID userId, Long chatId, long hours) {
+
+        log.info("User {} startSession at {}", userId, LocalDateTime.now());
+
         // Гарантированно чистим всё: и старую сессию, и старый таймер автоостановки
         resetCurrentSession(userId);
 
         UserEntity user;
         user = userService.findUserById(chatId);
         Locale userLocale = Locale.forLanguageTag(user.getLocale());
+
+        log.info("User {} getUseState = {}", userId,trialSubscribeService.getUseState(user));
+
 
         if (!trialSubscribeService.getUseState(user)) {
 

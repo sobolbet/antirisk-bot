@@ -174,6 +174,8 @@ public class KeyboardsService {
         row1.add(new KeyboardButton("ru-RU"));
         row1.add(new KeyboardButton("en-US"));
         row1.add(new KeyboardButton("uz-UZ"));
+        row1.add(new KeyboardButton("kk-KZ"));
+        row1.add(new KeyboardButton("tg-TJ"));
         //row4.add(new KeyboardButton(""));
         keyBoard.add(row1);
         //keyBoard.add(row2);

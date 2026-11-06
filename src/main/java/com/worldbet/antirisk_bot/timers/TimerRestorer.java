@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @Component
 public class TimerRestorer {
@@ -51,16 +52,34 @@ public class TimerRestorer {
         log.info("Вывожу список всех юзеров: {}", allUsers);
 
 
+
+
+        if (allUsers == null || allUsers.isEmpty()) {
+            log.info("No active allUsers found.");
+            return;
+        }
+
+
+        for (UserEntity u : allUsers) {
+            try {
+                Optional<String> optLocale = Optional.ofNullable(u.getLocale());
+                Locale userLocale = Locale.forLanguageTag(optLocale.orElse("ru-RU"));
+                String messageText = localeMessageService.getMessage("reply.botComeBack", userLocale);
+                MessageToSendEvent message = new MessageToSendEvent(this, Long.valueOf(u.getChatId()), messageText);
+                applicationEventPublisher.publishEvent(message);
+
+
+                userMessagesService.removeAllMessages(u.getId());
+            } catch (Exception e ) {
+                log.error("Failed to restore delete messages for user ID: {}", u.getId(), e);
+            }
+        }
+
+
         if (users == null || users.isEmpty()) {
             log.info("No active users found to restore.");
             return;
         }
-
-        if (allUsers == null || allUsers.isEmpty()) {
-            log.info("No active allUsers found to restore.");
-            return;
-        }
-
 
 
             for (UserEntity u : users) {
@@ -75,13 +94,6 @@ public class TimerRestorer {
                 }
             }
 
-            for (UserEntity u : allUsers) {
-                try {
-                    userMessagesService.removeAllMessages(u.getId());
-                } catch (Exception e ) {
-                    log.error("Failed to restore delete messages for user ID: {}", u.getId(), e);
-                }
-            }
 
 
         log.info("Successfully requested restoration for {} users.", users.size());

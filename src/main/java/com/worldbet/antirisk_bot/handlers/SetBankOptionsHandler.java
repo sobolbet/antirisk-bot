@@ -54,7 +54,7 @@ public class SetBankOptionsHandler implements InputMessageHandler{
         replyToUser.setChatId(userId);
         replyToUser.setText(localeMessageService.getMessage("reply.setBank",userLocale));
 
-        if (!message.getText().equals(localeMessageService.getMessage("reply.setBank",userLocale))) {
+        if (!message.getText().equals(localeMessageService.getMessage("menu.bank_options",userLocale))) {
 
             try {
                 Double startBank = 0.0;

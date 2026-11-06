@@ -15,6 +15,7 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 @ConfigurationProperties(prefix = "telegram")

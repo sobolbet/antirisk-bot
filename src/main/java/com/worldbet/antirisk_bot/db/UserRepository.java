@@ -4,8 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
 
     @Query(value = "select state from users.users as u where u.chat_id = :chatId ",nativeQuery = true)
